@@ -39,18 +39,6 @@
                     android:text="센서"
                     android:textColor="#323232" />
 
-                <Button
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:backgroundTint="#0000000"
-                    android:drawableTop="@drawable/ic_baseline_chat_bubble_24"
-                    android:layout_gravity="right"/>
-
-                <ImageButton
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/ic_baseline_chat_bubble_24" />
-
             </FrameLayout>
 
             <FrameLayout
