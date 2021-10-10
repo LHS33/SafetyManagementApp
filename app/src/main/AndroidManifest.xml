@@ -9,6 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SafetyManagementApp">
+        <activity android:name=".CctvBig"></activity>
+        <activity android:name=".CctvActivity" />
+        <activity android:name=".Sensor" />
+        <activity android:name=".HomeAdminActivity" />
+        <activity android:name=".FireWarningActivity" />
+        <activity android:name=".LoginActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
