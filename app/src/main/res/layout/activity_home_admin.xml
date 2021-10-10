@@ -1,9 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeAdminActivity">
+    tools:context=".HomeAdminActivity"
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ImageButton
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_baseline_menu_24"
+        android:backgroundTint=""
+        android:layout_gravity="right"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:backgroundTint="#F9F9F9"
+                    android:drawableTop="@drawable/ic_baseline_settings_input_antenna_24"
+                    android:layout_margin="10dp"
+                    android:padding="20dp"
+                    android:text="센서"
+                    android:textColor="#323232" />
+
+                <Button
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:backgroundTint="#0000000"
+                    android:drawableTop="@drawable/ic_baseline_chat_bubble_24"
+                    android:layout_gravity="right"/>
+
+                <ImageButton
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_baseline_chat_bubble_24" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_margin="10dp"
+                    android:backgroundTint="#F9F9F9"
+                    android:drawableTop="@drawable/ic_baseline_content_paste_24"
+                    android:padding="20dp"
+                    android:text="공지사항"
+                    android:textColor="#323232" />
+
+            </FrameLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:backgroundTint="#F9F9F9"
+                    android:drawableTop="@drawable/ic_baseline_campaign_24"
+                    android:layout_marginRight="10dp"
+                    android:padding="20dp"
+                    android:text="알림"
+                    android:textColor="#323232" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:backgroundTint="#F9F9F9"
+                    android:drawableTop="@drawable/ic_baseline_face_24"
+                    android:layout_marginLeft="10dp"
+                    android:padding="20dp"
+                    android:text="안전모 착용"
+                    android:textColor="#323232" />
+
+            </FrameLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>
