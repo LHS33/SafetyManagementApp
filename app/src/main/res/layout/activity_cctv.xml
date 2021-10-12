@@ -7,84 +7,132 @@
     tools:context=".CctvActivity">
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/cctv4"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:backgroundTint="#E3E5E8"
-        android:text="공사장4"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/button6"
+        app:layout_constraintBottom_toTopOf="@+id/cctv6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button3"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+        app:layout_constraintStart_toEndOf="@+id/cctv3"
+        app:layout_constraintTop_toBottomOf="@+id/cctv2" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/cctv2"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginTop="24dp"
         android:backgroundTint="#E3E5E8"
-        android:text="공사장2"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/button4"
+        app:layout_constraintBottom_toTopOf="@+id/cctv4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button"
+        app:layout_constraintStart_toEndOf="@+id/cctv1"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/cctv1"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginTop="24dp"
         android:backgroundTint="#E3E5E8"
-        android:text="공사장1"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/button3"
-        app:layout_constraintEnd_toStartOf="@+id/button2"
+        app:layout_constraintBottom_toTopOf="@+id/cctv3"
+        app:layout_constraintEnd_toStartOf="@+id/cctv2"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/cctv3"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:backgroundTint="#E3E5E8"
-        android:text="공사장3"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/button5"
-        app:layout_constraintEnd_toStartOf="@+id/button4"
+        app:layout_constraintBottom_toTopOf="@+id/cctv5"
+        app:layout_constraintEnd_toStartOf="@+id/cctv4"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/cctv1" />
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/cctv5"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginBottom="24dp"
         android:backgroundTint="#E3E5E8"
-        android:text="공사장5"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button6"
+        app:layout_constraintEnd_toStartOf="@+id/cctv6"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button3" />
+        app:layout_constraintTop_toBottomOf="@+id/cctv3" />
 
     <Button
-        android:id="@+id/button6"
+        android:id="@+id/cctv6"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginBottom="24dp"
         android:backgroundTint="#E3E5E8"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cctv5"
+        app:layout_constraintTop_toBottomOf="@+id/cctv4" />
+
+    <TextView
+        android:id="@+id/textCon6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="공사장6"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button5"
-        app:layout_constraintTop_toBottomOf="@+id/button4" />
+        android:textSize="12sp"
+        tools:layout_editor_absoluteX="224dp"
+        tools:layout_editor_absoluteY="386dp" />
+
+    <TextView
+        android:id="@+id/textCon5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="공사장5"
+        android:textSize="12sp"
+        tools:layout_editor_absoluteX="37dp"
+        tools:layout_editor_absoluteY="386dp" />
+
+    <TextView
+        android:id="@+id/textCon4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="공사장4"
+        android:textSize="12sp"
+        tools:layout_editor_absoluteX="224dp"
+        tools:layout_editor_absoluteY="210dp" />
+
+    <TextView
+        android:id="@+id/textCon3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="공사장3"
+        android:textSize="12sp"
+        tools:layout_editor_absoluteX="37dp"
+        tools:layout_editor_absoluteY="210dp" />
+
+    <TextView
+        android:id="@+id/textCon2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="공사장2"
+        android:textSize="12sp"
+        tools:layout_editor_absoluteX="224dp"
+        tools:layout_editor_absoluteY="34dp" />
+
+    <TextView
+        android:id="@+id/textCon1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="공사장1"
+        android:textSize="12sp"
+        tools:layout_editor_absoluteX="37dp"
+        tools:layout_editor_absoluteY="34dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

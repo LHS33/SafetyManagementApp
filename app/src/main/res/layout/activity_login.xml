@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView4"
+        app:layout_constraintBottom_toTopOf="@+id/textId"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo"
@@ -56,7 +56,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/loginBtn"
+        android:id="@+id/btnLogin"
         android:layout_width="309dp"
         android:layout_height="54dp"
         android:layout_marginStart="50dp"
@@ -69,7 +69,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/id"
+        android:id="@+id/editId"
         android:layout_width="309dp"
         android:layout_height="54dp"
         android:layout_marginStart="50dp"
@@ -82,10 +82,10 @@
         android:paddingLeft="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/textId" />
 
     <EditText
-        android:id="@+id/passwd"
+        android:id="@+id/editPasswd"
         android:layout_width="309dp"
         android:layout_height="54dp"
         android:layout_marginStart="50dp"
@@ -98,10 +98,10 @@
         android:paddingLeft="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+        app:layout_constraintTop_toBottomOf="@+id/textPasswd" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/textId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="51dp"
@@ -109,12 +109,12 @@
         android:layout_marginBottom="7dp"
         android:text="아이디"
         android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/id"
+        app:layout_constraintBottom_toTopOf="@+id/editId"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/textAutoLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="210dp"
@@ -122,12 +122,12 @@
         android:layout_marginBottom="16dp"
         android:text="자동 로그인"
         android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/loginBtn"
+        app:layout_constraintBottom_toTopOf="@+id/btnLogin"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwd" />
+        app:layout_constraintTop_toBottomOf="@+id/editPasswd" />
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/textIdSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
@@ -135,12 +135,12 @@
         android:layout_marginBottom="16dp"
         android:text="아이디 저장"
         android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/loginBtn"
+        app:layout_constraintBottom_toTopOf="@+id/btnLogin"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwd" />
+        app:layout_constraintTop_toBottomOf="@+id/editPasswd" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/textPasswd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="51dp"
@@ -149,10 +149,10 @@
         android:layout_marginBottom="7dp"
         android:text="비밀번호"
         android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/passwd"
+        app:layout_constraintBottom_toTopOf="@+id/editPasswd"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/id" />
+        app:layout_constraintTop_toBottomOf="@+id/editId" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

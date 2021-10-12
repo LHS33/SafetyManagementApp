@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SafetyManagementApp">
-        <activity android:name=".CctvBig"></activity>
+        <activity android:name=".CctvBig" />
         <activity android:name=".CctvActivity" />
         <activity android:name=".Sensor" />
         <activity android:name=".HomeAdminActivity" />
@@ -21,7 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>
