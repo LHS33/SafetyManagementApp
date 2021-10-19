@@ -7,70 +7,70 @@
     tools:context=".CctvActivity">
 
     <Button
-        android:id="@+id/cctv4"
+        android:id="@+id/sensor4"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:backgroundTint="#E3E5E8"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/cctv6"
+        app:layout_constraintBottom_toTopOf="@+id/sensor6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/cctv3"
-        app:layout_constraintTop_toBottomOf="@+id/cctv2" />
+        app:layout_constraintStart_toEndOf="@+id/sensor3"
+        app:layout_constraintTop_toBottomOf="@+id/sensor2" />
 
     <Button
-        android:id="@+id/cctv2"
+        android:id="@+id/sensor2"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginTop="24dp"
         android:backgroundTint="#E3E5E8"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/cctv4"
+        app:layout_constraintBottom_toTopOf="@+id/sensor4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/cctv1"
+        app:layout_constraintStart_toEndOf="@+id/sensor1"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/cctv1"
+        android:id="@+id/sensor1"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginTop="24dp"
         android:backgroundTint="#E3E5E8"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/cctv3"
-        app:layout_constraintEnd_toStartOf="@+id/cctv2"
+        app:layout_constraintBottom_toTopOf="@+id/sensor3"
+        app:layout_constraintEnd_toStartOf="@+id/sensor2"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/cctv3"
+        android:id="@+id/sensor3"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:backgroundTint="#E3E5E8"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/cctv5"
-        app:layout_constraintEnd_toStartOf="@+id/cctv4"
+        app:layout_constraintBottom_toTopOf="@+id/sensor5"
+        app:layout_constraintEnd_toStartOf="@+id/sensor4"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cctv1" />
+        app:layout_constraintTop_toBottomOf="@+id/sensor1" />
 
     <Button
-        android:id="@+id/cctv5"
+        android:id="@+id/sensor5"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginBottom="24dp"
         android:backgroundTint="#E3E5E8"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/cctv6"
+        app:layout_constraintEnd_toStartOf="@+id/sensor6"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cctv3" />
+        app:layout_constraintTop_toBottomOf="@+id/sensor3" />
 
     <Button
-        android:id="@+id/cctv6"
+        android:id="@+id/sensor6"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginBottom="24dp"
@@ -79,8 +79,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/cctv5"
-        app:layout_constraintTop_toBottomOf="@+id/cctv4" />
+        app:layout_constraintStart_toEndOf="@+id/sensor5"
+        app:layout_constraintTop_toBottomOf="@+id/sensor4" />
 
     <TextView
         android:id="@+id/textCon6"
@@ -90,9 +90,9 @@
         android:layout_marginEnd="147dp"
         android:text="공사장6"
         android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/cctv6"
+        app:layout_constraintBottom_toTopOf="@+id/sensor6"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cctv4" />
+        app:layout_constraintTop_toBottomOf="@+id/sensor4" />
 
     <TextView
         android:id="@+id/textCon5"
@@ -102,9 +102,9 @@
         android:layout_marginTop="10dp"
         android:text="공사장5"
         android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/cctv5"
+        app:layout_constraintBottom_toTopOf="@+id/sensor5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cctv3" />
+        app:layout_constraintTop_toBottomOf="@+id/sensor3" />
 
     <TextView
         android:id="@+id/textCon4"
@@ -114,9 +114,9 @@
         android:layout_marginEnd="147dp"
         android:text="공사장4"
         android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/cctv4"
+        app:layout_constraintBottom_toTopOf="@+id/sensor4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cctv2" />
+        app:layout_constraintTop_toBottomOf="@+id/sensor2" />
 
     <TextView
         android:id="@+id/textCon3"
@@ -125,7 +125,7 @@
         android:layout_marginStart="37dp"
         android:text="공사장3"
         android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/cctv3"
+        app:layout_constraintBottom_toTopOf="@+id/sensor3"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -135,7 +135,7 @@
         android:layout_marginEnd="147dp"
         android:text="공사장2"
         android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/cctv2"
+        app:layout_constraintBottom_toTopOf="@+id/sensor2"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
@@ -145,6 +145,6 @@
         android:layout_marginStart="37dp"
         android:text="공사장1"
         android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/cctv1"
+        app:layout_constraintBottom_toTopOf="@+id/sensor1"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
