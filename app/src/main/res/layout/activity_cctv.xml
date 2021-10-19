@@ -86,53 +86,65 @@
         android:id="@+id/textCon6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="147dp"
         android:text="공사장6"
         android:textSize="12sp"
-        tools:layout_editor_absoluteX="224dp"
-        tools:layout_editor_absoluteY="386dp" />
+        app:layout_constraintBottom_toTopOf="@+id/cctv6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cctv4" />
 
     <TextView
         android:id="@+id/textCon5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="37dp"
+        android:layout_marginTop="10dp"
         android:text="공사장5"
         android:textSize="12sp"
-        tools:layout_editor_absoluteX="37dp"
-        tools:layout_editor_absoluteY="386dp" />
+        app:layout_constraintBottom_toTopOf="@+id/cctv5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cctv3" />
 
     <TextView
         android:id="@+id/textCon4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="147dp"
         android:text="공사장4"
         android:textSize="12sp"
-        tools:layout_editor_absoluteX="224dp"
-        tools:layout_editor_absoluteY="210dp" />
+        app:layout_constraintBottom_toTopOf="@+id/cctv4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cctv2" />
 
     <TextView
         android:id="@+id/textCon3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="37dp"
         android:text="공사장3"
         android:textSize="12sp"
-        tools:layout_editor_absoluteX="37dp"
-        tools:layout_editor_absoluteY="210dp" />
+        app:layout_constraintBottom_toTopOf="@+id/cctv3"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textCon2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="16dp"
+        android:layout_marginEnd="147dp"
         android:text="공사장2"
         android:textSize="12sp"
-        tools:layout_editor_absoluteX="224dp"
-        tools:layout_editor_absoluteY="34dp" />
+        app:layout_constraintBottom_toTopOf="@+id/cctv2"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/textCon1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="37dp"
         android:text="공사장1"
         android:textSize="12sp"
-        tools:layout_editor_absoluteX="37dp"
-        tools:layout_editor_absoluteY="34dp" />
+        app:layout_constraintBottom_toTopOf="@+id/cctv1"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
