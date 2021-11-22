@@ -78,7 +78,7 @@
         android:background="@drawable/login_square"
         android:ems="10"
         android:inputType="textPersonName"
-        android:maxLength="12"
+
         android:paddingLeft="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -94,7 +94,7 @@
         android:background="@drawable/login_square"
         android:ems="10"
         android:inputType="textPassword"
-        android:maxLength="20"
+
         android:paddingLeft="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
