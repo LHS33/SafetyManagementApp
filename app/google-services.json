@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "638427137390",
+    "project_id": "pbl-safety-management-system",
+    "storage_bucket": "pbl-safety-management-system.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:638427137390:android:dee5b223f409eaa3b9ad7f",
+        "android_client_info": {
+          "package_name": "com.example.safetymanagementapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "638427137390-1tq4vggf72elncflses6mc9qk88c4f0j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_CHwly0IeLxe1XVxBs9-KXm7QFty59ME"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "638427137390-1tq4vggf72elncflses6mc9qk88c4f0j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
