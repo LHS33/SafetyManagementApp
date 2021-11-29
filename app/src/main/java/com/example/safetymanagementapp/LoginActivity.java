@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
 
         //Worker == 0
         //Manager == 1
-        Worker_Manager = 0;
+        Worker_Manager = -1;
 
         btnWorker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,12 +66,18 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+
+
                             if (Worker_Manager == 0) { //Worker
                                 Intent intent = new Intent(LoginActivity.this, HomeAdminActivity.class);
                                 startActivity(intent);
-                            } else { //Manager
+                            }
+                            if (Worker_Manager == 1) { //Manager
                                 Intent intent = new Intent(LoginActivity.this, HomeAdminActivity.class);
                                 startActivity(intent);
+                            }
+                            else { //Manager&Worker 선택 안했을 때
+                                Toast.makeText(LoginActivity.this, "근로자/관리자 여부를 선택하세요", Toast.LENGTH_SHORT).show();
                             }
                         } else { //fail
                             Toast.makeText(LoginActivity.this, "login fail", Toast.LENGTH_SHORT).show();
