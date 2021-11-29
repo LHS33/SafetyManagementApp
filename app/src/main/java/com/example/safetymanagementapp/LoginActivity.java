@@ -67,10 +67,10 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             if (Worker_Manager == 0) { //Worker
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                Intent intent = new Intent(LoginActivity.this, HomeAdminActivity.class);
                                 startActivity(intent);
                             } else { //Manager
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                Intent intent = new Intent(LoginActivity.this, HomeAdminActivity.class);
                                 startActivity(intent);
                             }
                         } else { //fail
