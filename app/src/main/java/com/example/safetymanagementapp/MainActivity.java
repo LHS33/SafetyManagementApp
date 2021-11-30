@@ -3,6 +3,7 @@ package com.example.safetymanagementapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -14,30 +15,39 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener{
     private Toolbar toolbar;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
+    FrameLayout fragment_container;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        fragment_container = findViewById(R.id.fragment_container);
 
-//
-//        toolbar = findViewById(R.id.toolBar);
-//        setSupportActionBar(toolbar);
-//
-//        // 액션바 객체
-//        ActionBar actionBar = getSupportActionBar();
-//        actionBar.setDisplayHomeAsUpEnabled(true);
-//
-//        //뒤로가기버튼 이미지 적용
-//        actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24);
-//
-//        navigationView = findViewById(R.id.navigationView);
-//        drawerLayout = findViewById(R.id.drawer_layout);
-//        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        toolbar = findViewById(R.id.toolBar);
+        setSupportActionBar(toolbar);
+
+        // 액션바 객체
+        //ActionBar actionBar = getSupportActionBar();
+        //actionBar.setDisplayHomeAsUpEnabled(true);
+
+        //뒤로가기버튼 이미지 적용
+        //actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24);
+
+        navigationView = findViewById(R.id.navigationView);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false); //기존 툴바 텍스트 안보이게
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24); // 뒤로가기 버튼의 이미지를 햄버거바로 설정
+
+
+        // navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 //            @Override
 //            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 //                switch(menuItem.getItemId()){
@@ -67,25 +77,59 @@ public class MainActivity extends AppCompatActivity{
 //                }
 //                return false;
 //            }
-//        });
-        FragmentView();
+      //  });
+        //FragmentView();
+
+    FragmentView();
     }
-//
-//    private void displayMessage(String message){
-//        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//
-//        switch(item.getItemId()){
-//            case android.R.id.home:
-//                drawerLayout.openDrawer(GravityCompat.START);
-//                return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
+
+
+
+
+    private void displayMessage(String message){
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch(item.getItemId()){
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch(menuItem.getItemId()){
+            case R.id.action_home:
+                menuItem.setChecked(true);
+                displayMessage("camera selected");
+                drawerLayout.closeDrawers();
+                return true;
+
+            case R.id.action_notice:
+                menuItem.setChecked(true);
+                displayMessage("photo selected");
+                drawerLayout.closeDrawers();
+                return true;
+
+            case R.id.action_allim:
+                menuItem.setChecked(true);
+                displayMessage("slideshow selected");
+                drawerLayout.closeDrawers();
+                return true;
+
+            case R.id.action_emer:
+                menuItem.setChecked(true);
+                displayMessage("selected");
+                drawerLayout.closeDrawers();
+                return true;
+        }
+        return false;
+    }
 
 
     ///<프래그먼트>
