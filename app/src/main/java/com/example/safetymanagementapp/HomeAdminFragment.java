@@ -24,7 +24,7 @@ public class HomeAdminFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.activity_home_admin, container, false);
+        view = inflater.inflate(R.layout.fragment_home_admin, container, false);
         setHasOptionsMenu(true);
         return view;
     }

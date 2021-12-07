@@ -14,7 +14,6 @@
         <activity android:name=".CctvBig" />
         <activity android:name=".CctvActivity" />
         <activity android:name=".Sensor" />
-        <activity android:name=".HomeAdminActivity" />
         <activity android:name=".FireWarningActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
