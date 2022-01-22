@@ -21,6 +21,15 @@ public class MainActivity extends AppCompatActivity
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     FrameLayout fragment_container;
+
+    int Worker_Manager;
+    Bundle bundle = new Bundle(); //번들 생성
+
+    HomeWorkerFragment workerFragment = new HomeWorkerFragment();
+    HomeAdminFragment adminFragment = new HomeAdminFragment();
+    NoticeFragment noticeFragment = new NoticeFragment();
+    EmergencyFragment emergencyFragment = new EmergencyFragment();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +89,12 @@ public class MainActivity extends AppCompatActivity
       //  });
         //FragmentView();
 
-    FragmentView();
+        Intent intent = getIntent(); //인텐트 생성
+        Worker_Manager = intent.getIntExtra("Worker_Manager",-1);
+        //Bundle bundle = new Bundle(); //번들 생성
+        bundle.putInt("Worker_Manager",Worker_Manager);
+
+        FragmentView();
     }
 
 
@@ -103,29 +117,46 @@ public class MainActivity extends AppCompatActivity
     }
 
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
         switch(menuItem.getItemId()){
             case R.id.action_home:
                 menuItem.setChecked(true);
                 displayMessage("camera selected");
                 drawerLayout.closeDrawers();
+                if(Worker_Manager==0){ //근무자
+                    transaction.replace(R.id.fragment_container, workerFragment);
+                    transaction.commit();
+                } else{
+                    transaction.replace(R.id.fragment_container, adminFragment);
+                    transaction.commit();
+                }
+
                 return true;
 
             case R.id.action_notice:
                 menuItem.setChecked(true);
                 displayMessage("photo selected");
                 drawerLayout.closeDrawers();
+                transaction.replace(R.id.fragment_container, noticeFragment);
+                transaction.commit();
                 return true;
 
             case R.id.action_allim:
                 menuItem.setChecked(true);
                 displayMessage("slideshow selected");
                 drawerLayout.closeDrawers();
+                //transaction.replace(R.id.fragment_container, notificationFragment);
+                transaction.commit();
                 return true;
 
             case R.id.action_emer:
                 menuItem.setChecked(true);
                 displayMessage("selected");
                 drawerLayout.closeDrawers();
+                transaction.replace(R.id.fragment_container, emergencyFragment);
+                transaction.commit();
                 return true;
         }
         return false;
@@ -138,29 +169,29 @@ public class MainActivity extends AppCompatActivity
         //프래그먼트 사용
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        Intent intent = getIntent(); //인텐트 생성
-        int Worker_Manager = intent.getIntExtra("Worker_Manager",-1);
-        Bundle bundle = new Bundle(); //번들 생성
-        bundle.putInt("Worker_Manager",Worker_Manager);
+//        Intent intent = getIntent(); //인텐트 생성
+//        int Worker_Manager = intent.getIntExtra("Worker_Manager",-1);
+//        Bundle bundle = new Bundle(); //번들 생성
+//        bundle.putInt("Worker_Manager",Worker_Manager);
 
 
         switch (Worker_Manager){
             case 0:
                 Toast.makeText(MainActivity.this, "근무자 프래그먼트 호출", Toast.LENGTH_SHORT).show();
                 // 근무자 프래그먼트 호출
-                HomeWorkerFragment fragment1 = new HomeWorkerFragment();
-                transaction.replace(R.id.fragment_container, fragment1);
+                //HomeWorkerFragment fragment1 = new HomeWorkerFragment();
+                transaction.replace(R.id.fragment_container, workerFragment);
                 transaction.commit();
 
                 //번들 전달 ( 나중에 필요할 까봐 우선 전달!)
-                fragment1.setArguments(bundle);
+                workerFragment.setArguments(bundle);
                 break;
 
             case 1:
                 Toast.makeText(MainActivity.this, "관리자 프래그먼트 호출", Toast.LENGTH_SHORT).show();
 
                 // 관리자 프래그먼트 호출
-                HomeAdminFragment adminFragment = new HomeAdminFragment();
+                //HomeAdminFragment adminFragment = new HomeAdminFragment();
                 transaction.replace(R.id.fragment_container, adminFragment);
                 transaction.commit();
 

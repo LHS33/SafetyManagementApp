@@ -67,35 +67,66 @@
                     android:max="10"
                     android:progress="1"/>
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="먼지"
-                    android:textSize="17dp" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="먼지"
+                        android:textSize="17dp" />
+
+                    <TextView
+                        android:id="@+id/tVDustValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:text="먼지수치"
+                        android:textSize="17dp" />
+
+                </LinearLayout>
 
                 <ProgressBar
                     android:id="@+id/dustProgressBar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="?android:attr/progressBarStyleHorizontal"
-                    android:max="100"
+                    android:max="5000"
                     android:progress="70"/>
 
-                <TextView
-                    android:id="@+id/tVCOValue"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="일산화탄소"
-                    android:textSize="17dp" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="가스"
+                        android:textSize="17dp" />
+
+                    <TextView
+                        android:id="@+id/tVCOValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:text="가스수치"
+                        android:textSize="17dp" />
+
+                </LinearLayout>
 
                 <ProgressBar
                     android:id="@+id/COProgressBar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="?android:attr/progressBarStyleHorizontal"
-                    android:max="100"
+                    android:max="10"
                     android:progress="20"/>
 
             </LinearLayout>

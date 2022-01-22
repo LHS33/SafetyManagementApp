@@ -24,6 +24,7 @@
                 android:layout_height="match_parent">
 
                 <Button
+                    android:id="@+id/btnSensor"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:backgroundTint="#F9F9F9"
@@ -80,6 +81,7 @@
                 android:layout_height="match_parent">
 
                 <Button
+                    android:id="@+id/btnHardHat"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:backgroundTint="#F9F9F9"

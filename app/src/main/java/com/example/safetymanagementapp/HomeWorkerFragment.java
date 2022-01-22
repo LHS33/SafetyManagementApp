@@ -33,6 +33,7 @@ public class HomeWorkerFragment extends Fragment {
     int moistureValue;
     int dustValue;
     TextView COValue;
+    TextView DustValue;
     TextView Today;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -49,6 +50,7 @@ public class HomeWorkerFragment extends Fragment {
 
         Today  = view.findViewById(R.id.tVToday);
         COValue = view.findViewById(R.id.tVCOValue);
+        DustValue = view.findViewById(R.id.tVDustValue);
 
         //현재시간 설정
        Today.setText(getTime());
@@ -148,14 +150,14 @@ public class HomeWorkerFragment extends Fragment {
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 String data = (String) snapshot.getValue().toString();
                 COValue.setText(data);
-               moistureProgressBar.setProgress((int) Double.parseDouble(data));
+                COProgressBar.setProgress((int) Double.parseDouble(data));
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 String data = (String) snapshot.getValue().toString();
                 COValue.setText(data);
-                moistureProgressBar.setProgress((int) Double.parseDouble(data));
+                COProgressBar.setProgress((int) Double.parseDouble(data));
             }
 
             @Override
@@ -177,6 +179,42 @@ public class HomeWorkerFragment extends Fragment {
         };
         rootRef.addChildEventListener(mChildEventListener);
 
+
+        ChildEventListener dustChildEventListener;
+        dustChildEventListener = new ChildEventListener() {
+
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                String data = (String) snapshot.getValue().toString();
+                DustValue.setText(data);
+                dustProgressBar.setProgress((int) Double.parseDouble(data));
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                String data = (String) snapshot.getValue().toString();
+                DustValue.setText(data);
+                dustProgressBar.setProgress((int) Double.parseDouble(data));
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+
+            }
+        };
+        rootRef2.addChildEventListener(dustChildEventListener);
 
     }
 
