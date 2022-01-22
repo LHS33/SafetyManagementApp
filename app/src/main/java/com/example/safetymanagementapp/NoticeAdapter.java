@@ -1,5 +1,6 @@
 package com.example.safetymanagementapp;
 
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder> {
 
     ArrayList<Notice> items = new ArrayList<Notice>();
+    public static SparseBooleanArray selectedItems = new SparseBooleanArray();
+    public static int prePosition = -1;
 
     @NonNull
     @Override
@@ -43,7 +46,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
         TextView notice_title;
         TextView notice_date;
         TextView notice_detail;
-        ImageView notice_check;
+        ImageView notice_click;
 
         public ViewHolder(View itemView){
             super(itemView);
@@ -51,12 +54,19 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
             notice_title = itemView.findViewById(R.id.notice_title);
             notice_date = itemView.findViewById(R.id.notice_date);
             notice_detail = itemView.findViewById(R.id.notice_detail);
-            notice_check = itemView.findViewById(R.id.notice_check);
+            notice_click = itemView.findViewById(R.id.notice_click);
+
         }
-        public void setItem (Notice item){ notice_title.setText(item.getTitle()); }
+
+        public void setItem (Notice item){
+            notice_title.setText(item.getTitle());
+            notice_date.setText(item.getDate());
+            notice_detail.setText(item.getDetail());
+        }
 
         public void setLayout(){layoutNotice.setVisibility(View.VISIBLE);}
     }
+
     public void setItems(ArrayList<Notice> items){
         this.items = items;
     }

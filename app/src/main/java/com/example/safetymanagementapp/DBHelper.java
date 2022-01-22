@@ -22,7 +22,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "id integer NOT NULL PRIMARY KEY AUTOINCREMENT, "
                 + "title TEXT NOT NULL, "
                 + "detail TEXT NOT NULL, "
-                + "date INTEGER NOT NULL "
+                + "date CHAR(20) NOT NULL "
                 + ")";
         db.execSQL(sql);
     }

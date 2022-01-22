@@ -1,5 +1,6 @@
 package com.example.safetymanagementapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -26,10 +27,12 @@ public class HomeAdminFragment extends Fragment {
     View view;
     Button btnSensor;
     Button btnHardHat;
+    Button btnAdminNotice;
     FrameLayout fragment_container;
 
     //FragmentTransaction transaction = getFragmentManager().beginTransaction();
     AdminSensorFragment adminSensorFragment = new AdminSensorFragment();
+    NoticeWriteFragment noticeWriteFragment = new NoticeWriteFragment();
 
     @Nullable
     @Override
@@ -39,15 +42,34 @@ public class HomeAdminFragment extends Fragment {
 
         btnSensor = view.findViewById(R.id.btnSensor);
         btnHardHat = view.findViewById(R.id.btnHardHat);
+        btnAdminNotice = view.findViewById(R.id.btnAdminNotice);
         fragment_container = view.findViewById(R.id.fragment_container);
 
         //센서 버튼 누르면
         btnSensor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Intent intent = new Intent(getActivity(), NoticeWriteActivity.class);
+                //startActivity(intent);
+
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, adminSensorFragment);
                 transaction.commit();
+
+            }
+        });
+
+        //공지사항 버튼 누르면
+        btnAdminNotice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), NoticeWriteActivity.class);
+                startActivity(intent);
+/*
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, noticeWriteFragment);
+                transaction.commit();
+ */
             }
         });
 

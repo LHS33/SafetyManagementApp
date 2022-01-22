@@ -19,9 +19,6 @@
             android:layout_height="wrap_content"
             android:gravity="center">
 
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
 
                 <Button
                     android:id="@+id/btnSensor"
@@ -34,13 +31,10 @@
                     android:text="센서"
                     android:textColor="#323232" />
 
-            </FrameLayout>
 
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
 
                 <Button
+                    android:id="@+id/btnAdminNotice"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_margin="10dp"
@@ -50,8 +44,6 @@
                     android:text="공지사항"
                     android:textColor="#323232" />
 
-            </FrameLayout>
-
 
         </LinearLayout>
 
@@ -60,9 +52,6 @@
             android:layout_height="wrap_content"
             android:gravity="center">
 
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
 
                 <Button
                     android:layout_width="150dp"
@@ -74,11 +63,7 @@
                     android:text="알림"
                     android:textColor="#323232" />
 
-            </FrameLayout>
 
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
 
                 <Button
                     android:id="@+id/btnHardHat"
@@ -91,7 +76,6 @@
                     android:text="안전모 착용"
                     android:textColor="#323232" />
 
-            </FrameLayout>
 
 
         </LinearLayout>

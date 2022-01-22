@@ -1,9 +1,17 @@
 package com.example.safetymanagementapp;
 
 public class Notice {
+    int id;
     String title;
-    int date;
-    String datail;
+    String detail;
+    String date;
+
+    public Notice(int id, String title, String detail, String date){
+        this.id = id;
+        this.title = title;
+        this.detail = detail;
+        this.date = date;
+    }
 
     public String getTitle() {
         return title;
@@ -13,19 +21,19 @@ public class Notice {
         this.title = title;
     }
 
-    public int getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(int date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
-    public String getDatail() {
-        return datail;
+    public String getDetail() {
+        return detail;
     }
 
-    public void setDatail(String datail) {
-        this.datail = datail;
+    public void setDetail(String datail) {
+        this.detail = datail;
     }
 }

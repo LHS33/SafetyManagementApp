@@ -43,7 +43,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/notice_check"
+            android:id="@+id/notice_click"
             android:layout_marginBottom="20dp"
             android:layout_width="25dp"
             android:layout_height="25dp"
