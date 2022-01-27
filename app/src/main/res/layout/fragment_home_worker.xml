@@ -145,8 +145,15 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/border"
-                android:orientation="vertical"
-                android:padding="10dp">
+                android:orientation="horizontal"
+                android:padding="15dp">
+
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/notice_viewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/browser_actions_bg_grey"/>
+
             </LinearLayout>
 
             <TextView

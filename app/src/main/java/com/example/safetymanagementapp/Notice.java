@@ -6,11 +6,22 @@ public class Notice {
     String detail;
     String date;
 
-    public Notice(int id, String title, String detail, String date){
-        this.id = id;
+    boolean expandable;
+
+    public boolean isExpandable() {
+        return expandable;
+    }
+
+    public void setExpandable(boolean expandable) {
+        this.expandable = expandable;
+    }
+
+    public Notice(String title, String detail, String date){
+        //this.id = id;
         this.title = title;
         this.detail = detail;
         this.date = date;
+        this.expandable = false;
     }
 
     public String getTitle() {

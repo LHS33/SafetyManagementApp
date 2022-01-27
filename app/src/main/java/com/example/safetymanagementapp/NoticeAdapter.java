@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,8 +18,13 @@ import java.util.ArrayList;
 public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder> {
 
     ArrayList<Notice> items = new ArrayList<Notice>();
-    public static SparseBooleanArray selectedItems = new SparseBooleanArray();
-    public static int prePosition = -1;
+    /*
+    public NoticeAdapter(ArrayList<Notice> items){
+        this.items = items;
+    }
+    */
+    //public static SparseBooleanArray selectedItems = new SparseBooleanArray();
+    //public static int prePosition = -1;
 
     @NonNull
     @Override
@@ -34,6 +40,9 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
         Notice item = items.get(position);
         holder.setItem(item);
         holder.setLayout();
+
+        boolean isExpandable = items.get(position).isExpandable();
+        holder.expandableLayout.setVisibility(isExpandable ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -41,12 +50,13 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
         return items.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder{
         LinearLayout layoutNotice;
         TextView notice_title;
         TextView notice_date;
         TextView notice_detail;
         ImageView notice_click;
+        RelativeLayout expandableLayout;
 
         public ViewHolder(View itemView){
             super(itemView);
@@ -55,7 +65,16 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
             notice_date = itemView.findViewById(R.id.notice_date);
             notice_detail = itemView.findViewById(R.id.notice_detail);
             notice_click = itemView.findViewById(R.id.notice_click);
+            expandableLayout = itemView.findViewById(R.id.expandable_layout);
 
+            notice_click.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Notice notice = items.get(getAdapterPosition());
+                    notice.setExpandable(!notice.isExpandable());
+                    notifyItemChanged(getAdapterPosition());
+                }
+            });
         }
 
         public void setItem (Notice item){

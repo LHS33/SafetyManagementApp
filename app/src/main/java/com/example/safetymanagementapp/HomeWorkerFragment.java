@@ -2,6 +2,9 @@ package com.example.safetymanagementapp;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.pdf.PdfDocument;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,15 +21,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 public class HomeWorkerFragment extends Fragment {
 
@@ -39,6 +52,16 @@ public class HomeWorkerFragment extends Fragment {
     TextView COValue;
     TextView DustValue;
     TextView Today;
+
+    ViewPager viewPager;
+    NoticeViewPagerAdapter noticeViewPagerAdapter;
+
+    private DBHelper helper;
+    private SQLiteDatabase db;
+    private Cursor cursor;
+    int id_n;
+
+    FirebaseFirestore fireStoreDB = FirebaseFirestore.getInstance();
 
     private NotificationHelper mNotificationhelper;
     private Context mContext;
@@ -72,6 +95,51 @@ public class HomeWorkerFragment extends Fragment {
         Today  = view.findViewById(R.id.tVToday);
         COValue = view.findViewById(R.id.tVCOValue);
         DustValue = view.findViewById(R.id.tVDustValue);
+
+        viewPager = view.findViewById(R.id.notice_viewPager);
+        noticeViewPagerAdapter = new NoticeViewPagerAdapter(getChildFragmentManager());
+
+        fireStoreDB.collection("notices").orderBy("date", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            ArrayList<Notice> items = new ArrayList<>();
+                            int cnt=0;
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                cnt++;
+                                Log.d("tag", "HomeWorkerFragment cnt : " + cnt);
+                            }
+                            for(int i=0;i<cnt;i++){
+                                Fragment fragment = NoticeViewPagerFragment.newInstance(i);
+                                noticeViewPagerAdapter.addItem(fragment);
+                                Log.d("tag", "add fragment");
+                            }
+                            viewPager.setAdapter(noticeViewPagerAdapter);
+                        } else {
+                            Log.d("tag", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+/*
+        helper = new DBHelper(getActivity().getApplicationContext());
+        db = helper.getWritableDatabase();
+
+        String sql = "select id from Notice";
+        int id_n = -1;
+        if(db != null){
+            cursor = db.rawQuery(sql, null);
+            id_n = cursor.getCount();
+        }
+        for(int i=0;i<id_n;i++){
+            Fragment fragment = NoticeViewPagerFragment.newInstance(i);
+            noticeViewPagerAdapter.addItem(fragment);
+        }
+        */
+
+        //viewPager.setAdapter(noticeViewPagerAdapter);
 
         //현재시간 설정
        Today.setText(getTime());
