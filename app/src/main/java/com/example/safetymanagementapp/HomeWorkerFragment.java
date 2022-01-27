@@ -1,18 +1,22 @@
 package com.example.safetymanagementapp;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.database.ChildEventListener;
@@ -36,6 +40,23 @@ public class HomeWorkerFragment extends Fragment {
     TextView DustValue;
     TextView Today;
 
+    private NotificationHelper mNotificationhelper;
+    private Context mContext;
+    MainActivity activity;
+
+    String C0Value;
+
+
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+
+        mContext = context;
+        activity = (MainActivity)getActivity();
+    }
+
+
+
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home_worker, container, false);
         setHasOptionsMenu(true);
@@ -56,37 +77,15 @@ public class HomeWorkerFragment extends Fragment {
        Today.setText(getTime());
 
         //데이터베이스 센서 값 받아오기
-
-
         getSensorValue();
 
 
-        // URL 설정.
-        String service_key = "Yvgu9A%2BZAvc3h4ok1csvEzNN8mBLy3g0bj%2FB7uhTkGPbaQ49fnVIxR78irZKiokYcoTilrEgRiijbW9fa4r0lg%3D%3D";
-        String num_of_rows = "10";
-        String page_no = "1";
-        String date_type = "JSON";
-        String base_date = "2021210";
-        String base_time = "0600";
-        String nx = "55";
-        String ny = "127";
-
-        String url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst?" +
-                "serviceKey="+service_key+
-                "&numOfRows="+num_of_rows+
-                "&pageNo="+page_no+
-                "&dataType="+date_type+
-                "&base_date="+base_date+
-                "&base_time="+base_time+
-                "&nx="+nx+
-                "&ny="+ny;
-
-        // AsyncTask를 통해 HttpURLConnection 수행.
-        NetworkTask networkTask = new NetworkTask(url, null);
-        networkTask.execute();
+        mNotificationhelper = new NotificationHelper(mContext);
 
         return view;
     }
+
+
 
     public class NetworkTask extends AsyncTask<Void, Void, String> {
 
@@ -140,7 +139,6 @@ public class HomeWorkerFragment extends Fragment {
 
         //저장시킬 노드 참조객체 가져오기
         DatabaseReference rootRef = firebaseDatabase.getReference().child("sensor").child("1-set"); // () 안에 아무것도 안 쓰면 최상위 노드드
-
         DatabaseReference rootRef2 = firebaseDatabase.getReference().child("sensor").child("2-set");
 
         ChildEventListener mChildEventListener;
@@ -151,6 +149,7 @@ public class HomeWorkerFragment extends Fragment {
                 String data = (String) snapshot.getValue().toString();
                 COValue.setText(data);
                 COProgressBar.setProgress((int) Double.parseDouble(data));
+
             }
 
             @Override
@@ -158,7 +157,7 @@ public class HomeWorkerFragment extends Fragment {
                 String data = (String) snapshot.getValue().toString();
                 COValue.setText(data);
                 COProgressBar.setProgress((int) Double.parseDouble(data));
-            }
+           }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
@@ -179,7 +178,7 @@ public class HomeWorkerFragment extends Fragment {
         };
         rootRef.addChildEventListener(mChildEventListener);
 
-
+//미세먼지 함수
         ChildEventListener dustChildEventListener;
         dustChildEventListener = new ChildEventListener() {
 
@@ -188,6 +187,11 @@ public class HomeWorkerFragment extends Fragment {
                 String data = (String) snapshot.getValue().toString();
                 DustValue.setText(data);
                 dustProgressBar.setProgress((int) Double.parseDouble(data));
+
+                //push 알림
+                if((int) Double.parseDouble(data)>1500)
+                    sendOnChannel1("경고", "미세먼지 수치가"+Integer.parseInt(data)+"입니다");
+
             }
 
             @Override
@@ -195,6 +199,11 @@ public class HomeWorkerFragment extends Fragment {
                 String data = (String) snapshot.getValue().toString();
                 DustValue.setText(data);
                 dustProgressBar.setProgress((int) Double.parseDouble(data));
+
+                //push 알림
+                if((int) Double.parseDouble(data)>1500)
+                    sendOnChannel1("경고", "미세먼지 수치가"+Integer.parseInt(data)+"입니다");
+
             }
 
             @Override
@@ -217,5 +226,12 @@ public class HomeWorkerFragment extends Fragment {
         rootRef2.addChildEventListener(dustChildEventListener);
 
     }
+
+// push 알림 함수
+    public void sendOnChannel1(String title, String message){
+        NotificationCompat.Builder nb = mNotificationhelper.getChannel1Notification(title, message);
+        mNotificationhelper.getManager().notify(1, nb.build());
+    }
+
 
 }
