@@ -19,7 +19,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db){
         //공지 테이블
         sql = "create table Notice ("
-                + "id integer NOT NULL PRIMARY KEY AUTOINCREMENT, "
+                + "id integer NOT NULL PRIMARY KEY, "
                 + "title TEXT NOT NULL, "
                 + "detail TEXT NOT NULL, "
                 + "date CHAR(20) NOT NULL "
