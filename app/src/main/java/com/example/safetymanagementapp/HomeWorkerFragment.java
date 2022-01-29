@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.pdf.PdfDocument;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -38,6 +40,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,7 +53,13 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
+import io.grpc.internal.JsonParser;
+
 
 public class HomeWorkerFragment extends Fragment {
 
@@ -63,7 +72,7 @@ public class HomeWorkerFragment extends Fragment {
     TextView COValue;
     TextView DustValue;
     TextView Today;
-
+    TextView Weather;
     ViewPager viewPager;
     NoticeViewPagerAdapter noticeViewPagerAdapter;
 
@@ -92,6 +101,7 @@ public class HomeWorkerFragment extends Fragment {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home_worker, container, false);
         setHasOptionsMenu(true);
@@ -105,6 +115,7 @@ public class HomeWorkerFragment extends Fragment {
         COProgressBar.setIndeterminate(false);
 
         Today = view.findViewById(R.id.tVToday);
+        Weather = view.findViewById(R.id.tVWeather);
         COValue = view.findViewById(R.id.tVCOValue);
         DustValue = view.findViewById(R.id.tVDustValue);
 
@@ -322,22 +333,32 @@ public class HomeWorkerFragment extends Fragment {
         mNotificationhelper.getManager().notify(1, nb.build());
     }
 
+// 공공데이터 API
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void lookUpWeather() throws IOException, JSONException {
 
 
+        //현재 연도,월,일 받아오기
+        LocalDate nowDate = LocalDate.now();
+        DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyyMMdd");
+
+        // 현재 시간 hhmm
+        LocalTime nowTime = LocalTime.now();
+        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HHmm");
+
         String nx = "60";	//위도
         String ny = "125";	//경도
-        String baseDate = "20220127";	//조회하고싶은 날짜
-        String baseTime = "0500";	//조회하고싶은 시간
+        String baseDate = nowDate.format(formatterDate);	//조회하고싶은 날짜
+     //   String baseTime = nowTime.format(formatterTime);	//조회하고싶은 시간
+         String baseTime= "0500";
         String type = "json";	//조회하고 싶은 type(json, xml 중 고름)
 
         String weather = null;
         String tmperature=null;
 
-//		참고문서에 있는 url주소
-        String apiUrl = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0";
-//         홈페이지에서 받은 키
+        String apiUrl = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst";
+//      홈페이지에서 받은 키
         String serviceKey = "Yvgu9A%2BZAvc3h4ok1csvEzNN8mBLy3g0bj%2FB7uhTkGPbaQ49fnVIxR78irZKiokYcoTilrEgRiijbW9fa4r0lg%3D%3D";
 
         StringBuilder urlBuilder = new StringBuilder(apiUrl);
@@ -357,7 +378,6 @@ public class HomeWorkerFragment extends Fragment {
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Content-type", "application/json");
         System.out.println("Response code: " + conn.getResponseCode());
-
         BufferedReader rd;
         if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -377,22 +397,29 @@ public class HomeWorkerFragment extends Fragment {
 
         //=======이 밑에 부터는 json에서 데이터 파싱해 오는 부분이다=====//
         // json 키를 가지고 데이터를 파싱
-        System.out.println("json"+json);
-        JSONObject jsonObj_1 = new JSONObject(json);
-        String response = jsonObj_1.getString("response");
+try {
 
-        // response 로 부터 body 찾기
-        JSONObject jsonObj_2 = new JSONObject(response);
-        String body = jsonObj_2.getString("body");
+   // json = json.replace("\\\"","'");
+    JSONObject jsonObj_1 = new JSONObject(json);
+    //JSONObject jsonObj_1 = new JSONObject("{"+ json+"}");
+    String response = jsonObj_1.getString("response");
 
-        // body 로 부터 items 찾기
-        JSONObject jsonObj_3 = new JSONObject(body);
-        String items = jsonObj_3.getString("items");
-        Log.i("ITEMS", items);
+    System.out.println("response"+response);
+    System.out.println("jsonOjb_1"+jsonObj_1);
 
-        // items로 부터 itemlist 를 받기
-        JSONObject jsonObj_4 = new JSONObject(items);
-        JSONArray jsonArray = jsonObj_4.getJSONArray("item");
+
+    // response 로 부터 body 찾기
+    JSONObject jsonObj_2 = new JSONObject(response);
+    String body = jsonObj_2.getString("body");
+
+    // body 로 부터 items 찾기
+    JSONObject jsonObj_3 = new JSONObject(body);
+    String items = jsonObj_3.getString("items");
+    Log.i("ITEMS", items);
+
+    // items로 부터 itemlist 를 받기
+    JSONObject jsonObj_4 = new JSONObject(items);
+    JSONArray jsonArray = jsonObj_4.getJSONArray("item");
 
         for (int i = 0; i < jsonArray.length(); i++) {
             jsonObj_4 = jsonArray.getJSONObject(i);
@@ -402,7 +429,7 @@ public class HomeWorkerFragment extends Fragment {
             if (category.equals("SKY")) {
                 weather = "현재 날씨는 ";
                 if (fcstValue.equals("1")) {
-                    weather += "맑은 상태로";
+                    weather += "맑은 상태로 ";
                 } else if (fcstValue.equals("2")) {
                     weather += "비가 오는 상태로 ";
                 } else if (fcstValue.equals("3")) {
@@ -413,15 +440,18 @@ public class HomeWorkerFragment extends Fragment {
             }
 
 
-            if (category.equals("T3H") || category.equals("T1H")) {
+            if ( category.equals("TMP")) {
                 tmperature = "기온은 " + fcstValue + "℃ 입니다.";
             }
-
-
-            Log.i("WEATER_TAG", weather + tmperature);
+            Log.i("WEATHER_TAG", weather + tmperature);
+            Weather.setText(weather + tmperature);
         }
 
 
+
+}catch (JSONException e) {
+    System.out.println(e.getMessage());
+}
 
 
     }
