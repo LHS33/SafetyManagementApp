@@ -6,6 +6,21 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".HomeWorkerFragment">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="관리자 화면"
+            android:textSize="18sp" />
+
+    </androidx.appcompat.widget.Toolbar>
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -28,7 +43,7 @@
                 android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/tVTopNotice"
+                android:id="@+id/tVWeather"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
