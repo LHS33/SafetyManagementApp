@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +15,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -23,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText editId;
     EditText editPasswd;
     private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
 
     int Worker_Manager;
 
@@ -87,5 +90,23 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void onStart(){
+        super.onStart();
+        currentUser = mAuth.getInstance().getCurrentUser();
+        if(currentUser!=null){
+            String email = currentUser.getEmail();
+            Log.d("login_email", email);
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            if(email.contains("worker")){
+                Worker_Manager = 0;
+            }else{
+                Worker_Manager = 1;
+            }
+            intent.putExtra("Worker_Manager", Worker_Manager);
+            startActivity(intent);
+            finish();
+        }
     }
 }
