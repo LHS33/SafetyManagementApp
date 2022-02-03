@@ -4,17 +4,16 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <application
+        android:networkSecurityConfig="@xml/network_security_config"
         android:allowBackup="true"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.SafetyManagementApp"
-        android:usesCleartextTraffic="true">
-        <activity android:name=".CameraActivity"></activity>
+        android:theme="@style/Theme.SafetyManagementApp">
+
         <activity android:name=".CctvBig" />
         <activity android:name=".CctvActivity" />
         <activity android:name=".Sensor" />
@@ -27,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".NoticeWriteActivity" />
+        <activity android:name=".NoticeWriteActivity"></activity>
     </application>
 
 </manifest>
