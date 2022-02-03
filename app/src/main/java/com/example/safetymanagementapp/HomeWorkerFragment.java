@@ -62,11 +62,10 @@ import java.net.URLEncoder;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-
-import io.grpc.internal.JsonParser;
 
 
 public class HomeWorkerFragment extends Fragment {
@@ -537,6 +536,8 @@ public class HomeWorkerFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void lookUpWeather() throws IOException, JSONException {
+
+
         //현재 연도,월,일 받아오기
         LocalDate nowDate = LocalDate.now();
         DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyyMMdd");
@@ -548,26 +549,24 @@ public class HomeWorkerFragment extends Fragment {
         //String nx = "60";	//위도
         //String ny = "125";	//경도
         String baseDate = nowDate.format(formatterDate);	//조회하고싶은 날짜
-       // String baseTimee = nowTime.format(formatterTime);	//조회하고싶은 시간
-        Log.d("today_date", baseDate);
-       // Log.d("today_time", baseTimee);
-        String baseTime= "0500";
-        String type = "JSON";	//조회하고 싶은 type(json, xml 중 고름)
-        String numOfRows = "10";
-        String pageNo = "1";
+       String baseTime =  getLastBaseTime().format(formatterTime);	//조회하고싶은 시간
+
+        System.out.println("time : "+ getLastBaseTime());
+        //String baseTime= "0500";
+        String type = "json";	//조회하고 싶은 type(json, xml 중 고름)
 
         String weather = null;
         String tmperature=null;
 
         String apiUrl = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst";
 //      홈페이지에서 받은 키
-   //    String serviceKey = "Yvgu9A%2BZAvc3h4ok1csvEzNN8mBLy3g0bj%2FB7uhTkGPbaQ49fnVIxR78irZKiokYcoTilrEgRiijbW9fa4r0lg%3D%3D";
+       String serviceKey = "Yvgu9A%2BZAvc3h4ok1csvEzNN8mBLy3g0bj%2FB7uhTkGPbaQ49fnVIxR78irZKiokYcoTilrEgRiijbW9fa4r0lg%3D%3D";
 
-        String serviceKey = "QT7gSdbs%2BFgYe3X7qwE9QyKXlpo5CE9fq7Qaa3xLX5vI4TKPyzyI0WKXZ5JeH9r85uiZQHiGbwBKUD3Lm48Nqg%3D%3D";
+      //  String serviceKey = "QT7gSdbs%2BFgYe3X7qwE9QyKXlpo5CE9fq7Qaa3xLX5vI4TKPyzyI0WKXZ5JeH9r85uiZQHiGbwBKUD3Lm48Nqg%3D%3D";
         StringBuilder urlBuilder = new StringBuilder(apiUrl);
         urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "=" + serviceKey);
-        urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode(numOfRows, "UTF-8"));
-        urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode(pageNo, "UTF-8"));
+   //     urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode(numOfRows, "UTF-8"));
+   //     urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode(pageNo, "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("nx", "UTF-8") + "=" + URLEncoder.encode(nx, "UTF-8")); //경도
         urlBuilder.append("&" + URLEncoder.encode("ny", "UTF-8") + "=" + URLEncoder.encode(ny, "UTF-8")); //위도
         urlBuilder.append("&" + URLEncoder.encode("base_date", "UTF-8") + "=" + URLEncoder.encode(baseDate, "UTF-8")); /* 조회하고싶은 날짜*/
@@ -583,7 +582,7 @@ public class HomeWorkerFragment extends Fragment {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Content-type", "application/json");
-        conn.setRequestProperty("Accept", "*/*;q=0.9");
+        conn.setRequestProperty("Accept", "*/*;q=0.9"); //있어야되는지 아닌지 테스트해봐야됨
         System.out.println("Response code: " + conn.getResponseCode());
         BufferedReader rd;
         if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
@@ -600,7 +599,6 @@ public class HomeWorkerFragment extends Fragment {
 
         rd.close();
         conn.disconnect();
-        System.out.println("sb_toString : " + sb.toString());
         String json = sb.toString();
 
         //=======이 밑에 부터는 json에서 데이터 파싱해 오는 부분이다=====//
@@ -608,7 +606,6 @@ public class HomeWorkerFragment extends Fragment {
 try {
 
    // json = json.replace("\\\"","'");
-    System.out.println("json의 값 : " + json);
     JSONObject jsonObj_1 = new JSONObject(json);
     //JSONObject jsonObj_1 = new JSONObject("{"+ json+"}");
     String response = jsonObj_1.getString("response");
@@ -665,5 +662,21 @@ try {
 
     }
 
+    // calBase : 현재시간의 Calendar 객체
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private LocalDateTime getLastBaseTime() {
+        LocalDateTime localTime = LocalDateTime.now();
+        int t = localTime.getHour();
+        if (t < 2) {
+            LocalDateTime otherTime = localTime.minusDays(1);
+            LocalDateTime otherTime2 = localTime.withHour(23);
+            return otherTime2;
+        } else {
+
+            LocalDateTime otherTime = localTime.withHour(t - (t + 1) % 3);
+            return otherTime;
+        }
+
+    }
 }
