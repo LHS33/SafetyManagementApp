@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.pdf.PdfDocument;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,19 +12,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -54,11 +48,10 @@ import java.net.URLEncoder;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-
-import io.grpc.internal.JsonParser;
 
 
 public class HomeWorkerFragment extends Fragment {
@@ -350,8 +343,10 @@ public class HomeWorkerFragment extends Fragment {
         String nx = "60";	//위도
         String ny = "125";	//경도
         String baseDate = nowDate.format(formatterDate);	//조회하고싶은 날짜
-     //   String baseTime = nowTime.format(formatterTime);	//조회하고싶은 시간
-         String baseTime= "0500";
+       String baseTime =  getLastBaseTime().format(formatterTime);	//조회하고싶은 시간
+
+        System.out.println("time : "+ getLastBaseTime());
+        //String baseTime= "0500";
         String type = "json";	//조회하고 싶은 type(json, xml 중 고름)
 
         String weather = null;
@@ -456,4 +451,21 @@ try {
 
     }
 
+    // calBase : 현재시간의 Calendar 객체
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private LocalDateTime getLastBaseTime() {
+        LocalDateTime localTime = LocalDateTime.now();
+        int t = localTime.getHour();
+        if (t < 2) {
+            LocalDateTime otherTime = localTime.minusDays(1);
+            LocalDateTime otherTime2 = localTime.withHour(23);
+            return otherTime2;
+        } else {
+
+            LocalDateTime otherTime = localTime.withHour(t - (t + 1) % 3);
+            return otherTime;
+        }
+
+    }
 }
