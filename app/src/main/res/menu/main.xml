@@ -14,4 +14,12 @@
         android:id="@+id/action_emer"
         android:title="비상시 행동상황" />
 </group>
+
+    <item android:title="">
+        <menu>
+            <item
+                android:id="@+id/action_logout"
+                android:title="로그아웃"/>
+        </menu>
+    </item>
 </menu>

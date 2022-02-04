@@ -18,13 +18,6 @@ import java.util.ArrayList;
 public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder> {
 
     ArrayList<Notice> items = new ArrayList<Notice>();
-    /*
-    public NoticeAdapter(ArrayList<Notice> items){
-        this.items = items;
-    }
-    */
-    //public static SparseBooleanArray selectedItems = new SparseBooleanArray();
-    //public static int prePosition = -1;
 
     @NonNull
     @Override

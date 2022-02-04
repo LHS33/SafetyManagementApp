@@ -17,6 +17,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void onCreate(SQLiteDatabase db){
+        /*
         //공지 테이블
         sql = "create table Notice ("
                 + "id integer NOT NULL PRIMARY KEY, "
@@ -25,6 +26,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "date CHAR(20) NOT NULL "
                 + ")";
         db.execSQL(sql);
+        */
     }
 
     public void onUpgrade(SQLiteDatabase db, int i, int i1){

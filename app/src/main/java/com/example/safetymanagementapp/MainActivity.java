@@ -9,11 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -29,6 +31,8 @@ public class MainActivity extends AppCompatActivity
     HomeAdminFragment adminFragment = new HomeAdminFragment();
     NoticeFragment noticeFragment = new NoticeFragment();
     EmergencyFragment emergencyFragment = new EmergencyFragment();
+
+    private long mBackWait = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +162,11 @@ public class MainActivity extends AppCompatActivity
                 transaction.replace(R.id.fragment_container, emergencyFragment);
                 transaction.commit();
                 return true;
+            case R.id.action_logout:
+                FirebaseAuth.getInstance().signOut();
+                Toast.makeText(MainActivity.this, "로그아웃", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
         }
         return false;
     }
@@ -204,7 +213,16 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
-
+    // 뒤로가기 두 번 누르면 종료
+    @Override
+    public void onBackPressed(){
+        if(System.currentTimeMillis() - mBackWait > 2000){
+            mBackWait = System.currentTimeMillis();
+            Toast.makeText(this, "한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+        } else{
+            ActivityCompat.finishAffinity(this);
+            System.exit(0);
+        }
+    }
 
 }
