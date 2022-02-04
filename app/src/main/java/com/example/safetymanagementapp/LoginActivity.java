@@ -4,10 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -24,8 +26,14 @@ public class LoginActivity extends AppCompatActivity {
     Button btnLogin;
     EditText editId;
     EditText editPasswd;
+
+    CheckBox cBAutoLogin;
+    private  boolean saveLoginData;
+    private SharedPreferences appData;
+
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
+
 
     int Worker_Manager;
 
@@ -39,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         editId = findViewById(R.id.editId);
         editPasswd = findViewById(R.id.editPasswd);
         mAuth = FirebaseAuth.getInstance();
+        cBAutoLogin = findViewById(R.id.checkBoxAutoLogin);
 
         //Worker == 0
         //Manager == 1
@@ -90,23 +99,36 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        if(cBAutoLogin.isChecked()){
+
+        }
     }
 
     public void onStart(){
         super.onStart();
-        currentUser = mAuth.getInstance().getCurrentUser();
-        if(currentUser!=null){
-            String email = currentUser.getEmail();
-            Log.d("login_email", email);
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            if(email.contains("worker")){
-                Worker_Manager = 0;
-            }else{
-                Worker_Manager = 1;
+        if(saveLoginData){
+            currentUser = mAuth.getInstance().getCurrentUser();
+            if(currentUser!=null){
+                String email = currentUser.getEmail();
+                Log.d("login_email", email);
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                if(email.contains("worker")){
+                    Worker_Manager = 0;
+                }else{
+                    Worker_Manager = 1;
+                }
+                intent.putExtra("Worker_Manager", Worker_Manager);
+                startActivity(intent);
+                finish();
             }
-            intent.putExtra("Worker_Manager", Worker_Manager);
-            startActivity(intent);
-            finish();
         }
     }
+
+    private void load(){
+        saveLoginData = appData.getBoolean("SAVE_LOGIN_DATA", false);
+    }
 }
+
+
+//설정값 저장 (로그인유지, 아이디 저장)
+//http://webs.co.kr/index.php?mid=Android&document_srl=3313729
