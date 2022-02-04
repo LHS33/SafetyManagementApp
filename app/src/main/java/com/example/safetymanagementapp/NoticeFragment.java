@@ -70,32 +70,8 @@ public class NoticeFragment extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
+    //공지 불러와서 어댑터에 설정하기.
     public void loadNotice(){
-        //DocumentReference docRef = fireStoreDB.collection("notices").document("notice");
-        /*
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        databaseReference.child("notices").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                notice_list list = snapshot.getValue(notice_list.class);
-
-                String title = list.getTitle();
-                String detail = list.getDetail();
-                String date = list.getDate();
-
-                ArrayList<Notice> items = new ArrayList<>();
-                items.add(new Notice(title, detail, date));
-
-                adapter.setItems(items);
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        */
 
         fireStoreDB.collection("notices").orderBy("date", Query.Direction.DESCENDING)
                 .get()
@@ -105,109 +81,22 @@ public class NoticeFragment extends Fragment {
                         if (task.isSuccessful()) {
                             ArrayList<Notice> items = new ArrayList<>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                //if(document.getId()!=null){
-                                    String title = document.getData().get("title").toString();
-                                    String detail = document.getData().get("detail").toString();
-                                    String date = document.getData().get("date").toString();
-
-                                    items.add(new Notice(title, detail, date));
-
-                                    //LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-                                    //recyclerView.setLayoutManager(layoutManager);
-                                    adapter.setItems(items);
-                                    adapter.notifyDataSetChanged();
-
-                                    Log.d("tag", document.getId() + " => " + document.getData());
-                              //  }
-                            }
-                        } else {
-                            Log.d("tag", "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-
-
-/*
-        fireStoreDB.collection("notices")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                        for(int i=0;i< value.size();item++){
-
-                        }
-                    }
-                })
-
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                //if(document.getId()!=null){
                                 String title = document.getData().get("title").toString();
                                 String detail = document.getData().get("detail").toString();
                                 String date = document.getData().get("date").toString();
 
-                                ArrayList<Notice> items = new ArrayList<>();
                                 items.add(new Notice(title, detail, date));
 
                                 adapter.setItems(items);
                                 adapter.notifyDataSetChanged();
-
                                 Log.d("tag", document.getId() + " => " + document.getData());
-                                //  }
                             }
                         } else {
                             Log.d("tag", "Error getting documents: ", task.getException());
                         }
                     }
                 });
-*/
-    /*
-        String sql = "select id, title, detail, date from Notice";
-
-        int recordCount = -1;
-
-        if(db != null){
-            cursor = db.rawQuery(sql, null);
-            recordCount = cursor.getCount();
-            ArrayList<Notice> items = new ArrayList<>();
-
-            for(int i=0;i<recordCount;i++){
-                cursor.moveToNext();
-
-                int id = cursor.getInt(0);
-                String title = cursor.getString(1);
-                String detail = cursor.getString(2);
-                String date = cursor.getString(3);
-                items.add(new Notice(id, title, detail, date));
-            }
-            cursor.close();
-
-            adapter.setItems(items);
-            adapter.notifyDataSetChanged();
-            */
 
         }
-
-
-
-    class  notice_list{
-        private String title;
-        private String detail;
-        private String date;
-
-        public notice_list(){}
-
-        public String getTitle(){
-            return title;
-        }
-        public String getDetail(){
-            return detail;
-        }
-        public String getDate(){
-            return date;
-        }
-    }
 
 }

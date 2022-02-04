@@ -28,9 +28,6 @@ public class NoticeViewPagerFragment extends Fragment {
     int page=0;
     TextView tVnotice_viewPager;
 
-    private DBHelper helper;
-    private SQLiteDatabase db;
-    private Cursor cursor;
 
     FirebaseFirestore fireStoreDB = FirebaseFirestore.getInstance();
 
@@ -40,16 +37,13 @@ public class NoticeViewPagerFragment extends Fragment {
         return fragment;
     }
 
+    //뷰페이저에 들어가는 프래그먼트의 텍스트뷰에 공지사항 제목 띄우기
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notice_viewpager, container, false);
 
         tVnotice_viewPager = view.findViewById(R.id.tVNotice_viewPager);
-
-        //helper = new DBHelper(getActivity().getApplicationContext());
-        //db = helper.getWritableDatabase();
-        //tVnotice_viewPager.setText(page+"");
 
         fireStoreDB.collection("notices").orderBy("date", Query.Direction.DESCENDING)
                 .get()
@@ -59,7 +53,6 @@ public class NoticeViewPagerFragment extends Fragment {
                         if (task.isSuccessful()) {
                             int cnt=-1;
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                //if(document.getId()!=null){
                                 String title = document.getData().get("title").toString();
                                 cnt ++;
                                 Log.d("tag", "title : " + title);
@@ -74,20 +67,6 @@ public class NoticeViewPagerFragment extends Fragment {
                         }
                     }
                 });
-
-/*
-        int sqlpage = page+1;
-        String sql = "select title from Notice where id = " + sqlpage;
-        if(db != null){
-            cursor = db.rawQuery(sql, null);
-            while(cursor.moveToNext()){
-                String title = cursor.getString(0);
-                tVnotice_viewPager.setText(title);
-            }
-            cursor.close();
-        }
-*/
-
 
         return view;
     }

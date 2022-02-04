@@ -32,7 +32,6 @@ public class HomeAdminFragment extends Fragment {
 
     //FragmentTransaction transaction = getFragmentManager().beginTransaction();
     AdminSensorFragment adminSensorFragment = new AdminSensorFragment();
-    NoticeWriteFragment noticeWriteFragment = new NoticeWriteFragment();
 
     @Nullable
     @Override
@@ -65,11 +64,6 @@ public class HomeAdminFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), NoticeWriteActivity.class);
                 startActivity(intent);
-/*
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, noticeWriteFragment);
-                transaction.commit();
- */
             }
         });
 

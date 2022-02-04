@@ -13,7 +13,6 @@ import java.util.ArrayList;
 public class NoticeViewPagerAdapter extends FragmentPagerAdapter {
 
     ArrayList<Fragment> items = new ArrayList<Fragment>();
-    int pageCount = 0;
 
     public NoticeViewPagerAdapter(@NonNull FragmentManager fm) {
         super(fm);
@@ -24,13 +23,11 @@ public class NoticeViewPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         Log.d("tag", "getItem");
         return items.get(position);
-        //return NoticeViewPagerFragment.newInstance(position);
     }
 
     @Override
     public int getCount() {
         return items.size();
-        //return pageCount;
     }
 
     public void addItem(Fragment item){
@@ -38,6 +35,7 @@ public class NoticeViewPagerAdapter extends FragmentPagerAdapter {
     }
 
 
+    //삭제?
     //삭제시 정상적으로 적용되게 할려면 아래 필요!
     @Override
     public int getItemPosition(@NonNull Object object) {

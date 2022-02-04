@@ -27,6 +27,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.grpc.internal.JsonParser;
+
 public class NoticeWriteActivity extends AppCompatActivity {
 
     DBHelper mDBhelper;
@@ -39,7 +41,6 @@ public class NoticeWriteActivity extends AppCompatActivity {
     Toolbar toolbar;
 
     private FirebaseFirestore fireStoreDB = FirebaseFirestore.getInstance();
-    CollectionReference colRefDB = fireStoreDB.collection("notices");
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
@@ -70,28 +71,18 @@ public class NoticeWriteActivity extends AppCompatActivity {
         SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm:ss");
         String getTime = dateFormat.format(date);
         String YMD = cYear + "." + cMonth + "." + cDay + "." + getTime;
-        //String YMD = cYear + "." + cMonth + "." + cDay;
-
-        /*
-        long now = System.currentTimeMillis();
-        Date mDate = new Date(now);
-        SimpleDateFormat simpleDate = new SimpleDateFormat("yyyyMMdd");
-        String YMD = simpleDate.format(mDate);
-        */
 
         btnNoticeSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //db.execSQL("insert into Notice(title, detail, date) values('" + eTNoticeTitle.getText() + "', '" + eTNoticeDetail.getText() + "', '" + YMD + "')");
 
-                //firestore에 공지사항 쓰는 코드
+                //해시맵에 공지사항 제목, 상세내용, 날짜 넣기
                 Map<String, Object> notice = new HashMap<>();
                 notice.put("title", eTNoticeTitle.getText().toString());
                 notice.put("detail", eTNoticeDetail.getText().toString());
                 notice.put("date", YMD);
-                //colRefDB.document("notice").set(notice);
 
-
+                //firestore에 공지사항 쓰는 코드
                 fireStoreDB.collection("notices")
                         .add(notice)
                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -106,22 +97,7 @@ public class NoticeWriteActivity extends AppCompatActivity {
                                 Log.w("tag", "Error writing document", e);
                             }
                         });
-/*
-                //firestore에 공지사항 쓰는 코드
-                fireStoreDB.collection("notices").document().set(notice)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Log.d("tag", "DocumentSnapshot successfully written!");
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w("tag", "Error writing document", e);
-                            }
-                        });
-*/
+
                 finish();
             }
         });
