@@ -63,16 +63,24 @@ public class LoginActivity extends AppCompatActivity {
         btnWorker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Worker_Manager = 0;
+                if(Worker_Manager == 0){ //버튼 클릭을 취소했을 때
+                    Worker_Manager = -1;
+                } else{
+                    Worker_Manager = 0;
+                }
                 intent.putExtra("Worker_Manager",Worker_Manager);
-
             }
         });
+
 
         btnManager.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Worker_Manager = 1;
+                if(Worker_Manager == 1){ //버튼 클릭을 취소했을 때
+                    Worker_Manager = -1;
+                } else{
+                    Worker_Manager = 1;
+                }
                 intent.putExtra("Worker_Manager",Worker_Manager);
             }
         });
@@ -88,11 +96,11 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            Log.d("LoginActivity", "task issuccessful 안");
                             if (Worker_Manager == 0 | Worker_Manager == 1) { //Worker && Manager
                                 save();
                                 startActivity(intent);
                             }
-
                             else { //Manager&Worker 선택 안했을 때
                                 Toast.makeText(LoginActivity.this, "근로자/관리자 여부를 선택하세요", Toast.LENGTH_SHORT).show();
                             }
