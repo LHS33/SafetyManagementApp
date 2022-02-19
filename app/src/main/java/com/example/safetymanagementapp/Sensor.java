@@ -27,7 +27,7 @@ public class Sensor extends AppCompatActivity {
             public void onClick(View view) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-                transaction.replace(R.id.fragment_container, construction1Fragment);
+                transaction.replace(R.id.fragment_sensor, construction1Fragment);
                 transaction.commit();
 
             }

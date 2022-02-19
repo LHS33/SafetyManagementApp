@@ -3,6 +3,7 @@ package com.example.safetymanagementapp;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,6 +80,8 @@ public class Construction1Fragment extends Fragment {
 
 
             ArrayList<Entry> entry_chart = new ArrayList<>();
+
+
 
 
             lineChart = (LineChart) view.findViewById(R.id.chart);//layout의 id

@@ -291,8 +291,8 @@ public class HomeWorkerFragment extends Fragment {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 
         //저장시킬 노드 참조객체 가져오기
-        DatabaseReference rootRef = firebaseDatabase.getReference().child("sensor").child("1-set"); // () 안에 아무것도 안 쓰면 최상위 노드드
-        DatabaseReference rootRef2 = firebaseDatabase.getReference().child("sensor").child("2-set");
+        DatabaseReference rootRef = firebaseDatabase.getReference().child("sensor").child("mq-2"); // () 안에 아무것도 안 쓰면 최상위 노드드
+        DatabaseReference rootRef2 = firebaseDatabase.getReference().child("sensor").child("PMS7003");
 
         ChildEventListener mChildEventListener;
         mChildEventListener = new ChildEventListener() {
