@@ -68,7 +68,10 @@ public class LoginActivity extends AppCompatActivity {
                 } else{
                     Worker_Manager = 0;
                 }
+
+
                 intent.putExtra("Worker_Manager",Worker_Manager);
+
             }
         });
 
@@ -96,14 +99,18 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Log.d("LoginActivity", "task issuccessful 안");
-                            if (Worker_Manager == 0 | Worker_Manager == 1) { //Worker && Manager
-                                save();
-                                startActivity(intent);
-                            }
-                            else { //Manager&Worker 선택 안했을 때
-                                Toast.makeText(LoginActivity.this, "근로자/관리자 여부를 선택하세요", Toast.LENGTH_SHORT).show();
-                            }
+                          if((email.contains("worker")&Worker_Manager==0)|email.contains("manager")&Worker_Manager==1) {
+                              if (Worker_Manager == 0 | Worker_Manager == 1) { //Worker && Manager
+                                  save();
+                                  startActivity(intent);
+                              } else { //Manager&Worker 선택 안했을 때
+                                  Toast.makeText(LoginActivity.this, "근로자/관리자 여부를 선택하세요", Toast.LENGTH_SHORT).show();
+                              }
+                          }
+                          else{
+                              Toast.makeText(LoginActivity.this, "login fail", Toast.LENGTH_SHORT).show();
+                          }
+
                         } else { //fail
                             Toast.makeText(LoginActivity.this, "login fail", Toast.LENGTH_SHORT).show();
                         }
