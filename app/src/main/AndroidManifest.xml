@@ -2,9 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.safetymanagementapp">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -17,8 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SafetyManagementApp"
         android:usesCleartextTraffic="true">
-
-        <activity android:name=".LoginActivity">
+        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".Item">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,16 +25,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".CameraActivity" />
-        android:theme="@style/Theme.SafetyManagementApp">
-
         <activity android:name=".CctvBig" />
         <activity android:name=".CctvActivity" />
         <activity android:name=".Sensor" />
         <activity android:name=".FireWarningActivity" />
-        <activity android:name=".HelmetCapture">
-        </activity>
+        <activity android:name=".HelmetCapture"></activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".NoticeWriteActivity"></activity>
+        <activity android:name=".NoticeWriteActivity" />
     </application>
 
 </manifest>
