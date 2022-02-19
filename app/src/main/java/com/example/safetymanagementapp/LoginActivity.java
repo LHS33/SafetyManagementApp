@@ -100,18 +100,17 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                           if((email.contains("worker")&Worker_Manager==0)|email.contains("manager")&Worker_Manager==1) {
-                              if (Worker_Manager == 0 | Worker_Manager == 1) { //Worker && Manager
-                                  save();
-                                  startActivity(intent);
-                              } else { //Manager&Worker 선택 안했을 때
-                                  Toast.makeText(LoginActivity.this, "근로자/관리자 여부를 선택하세요", Toast.LENGTH_SHORT).show();
-                              }
+                              save();
+                              startActivity(intent);
                           }
-                          else{
+                          else if(Worker_Manager == -1){ //근로자 관리자 버튼 클릭 안했을 때
+                              Toast.makeText(LoginActivity.this, "근로자/관리자 여부를 선택하세요", Toast.LENGTH_SHORT).show();
+                          }
+                          else{ //버튼이랑 아이디랑 매치가 안될때
                               Toast.makeText(LoginActivity.this, "login fail", Toast.LENGTH_SHORT).show();
                           }
 
-                        } else { //fail
+                        } else { //fail. 아이디 비밀번호 틀렸을 때
                             Toast.makeText(LoginActivity.this, "login fail", Toast.LENGTH_SHORT).show();
                         }
                     }
