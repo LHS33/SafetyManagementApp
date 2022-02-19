@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+/*
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -22,7 +22,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-
+*/
 import java.io.File;
 import java.io.IOException;
 
@@ -35,7 +35,8 @@ public class HelmetCapture extends AppCompatActivity {
         setContentView(R.layout.activity_helmet_capture);
 
         // 이미지 폴더 경로 참조
-        /*StorageReference listRef = FirebaseStorage.getInstance().getReference().child("gs://pbl-safety-management-system.appspot.com/test_image");
+        /*
+        StorageReference listRef = FirebaseStorage.getInstance().getReference().child("gs://pbl-safety-management-system.appspot.com/test_image");
 
 // listAll(): 폴더 내의 모든 이미지를 가져오는 함수
         listRef.listAll()
@@ -86,5 +87,6 @@ public class HelmetCapture extends AppCompatActivity {
                         }
                     }
                 });
+                */
     }
 }
