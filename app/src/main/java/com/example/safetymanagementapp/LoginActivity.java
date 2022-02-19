@@ -63,16 +63,27 @@ public class LoginActivity extends AppCompatActivity {
         btnWorker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Worker_Manager = 0;
+                if(Worker_Manager == 0){ //버튼 클릭을 취소했을 때
+                    Worker_Manager = -1;
+                } else{
+                    Worker_Manager = 0;
+                }
+
+
                 intent.putExtra("Worker_Manager",Worker_Manager);
 
             }
         });
 
+
         btnManager.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Worker_Manager = 1;
+                if(Worker_Manager == 1){ //버튼 클릭을 취소했을 때
+                    Worker_Manager = -1;
+                } else{
+                    Worker_Manager = 1;
+                }
                 intent.putExtra("Worker_Manager",Worker_Manager);
             }
         });
@@ -88,15 +99,18 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            if (Worker_Manager == 0 | Worker_Manager == 1) { //Worker && Manager
-                                save();
-                                startActivity(intent);
-                            }
+                          if((email.contains("worker")&Worker_Manager==0)|email.contains("manager")&Worker_Manager==1) {
+                              save();
+                              startActivity(intent);
+                          }
+                          else if(Worker_Manager == -1){ //근로자 관리자 버튼 클릭 안했을 때
+                              Toast.makeText(LoginActivity.this, "근로자/관리자 여부를 선택하세요", Toast.LENGTH_SHORT).show();
+                          }
+                          else{ //버튼이랑 아이디랑 매치가 안될때
+                              Toast.makeText(LoginActivity.this, "login fail", Toast.LENGTH_SHORT).show();
+                          }
 
-                            else { //Manager&Worker 선택 안했을 때
-                                Toast.makeText(LoginActivity.this, "근로자/관리자 여부를 선택하세요", Toast.LENGTH_SHORT).show();
-                            }
-                        } else { //fail
+                        } else { //fail. 아이디 비밀번호 틀렸을 때
                             Toast.makeText(LoginActivity.this, "login fail", Toast.LENGTH_SHORT).show();
                         }
                     }

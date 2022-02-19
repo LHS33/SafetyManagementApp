@@ -43,6 +43,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -291,11 +292,71 @@ public class HomeWorkerFragment extends Fragment {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 
         //저장시킬 노드 참조객체 가져오기
-        DatabaseReference rootRef = firebaseDatabase.getReference().child("sensor").child("mq-2"); // () 안에 아무것도 안 쓰면 최상위 노드드
-        DatabaseReference rootRef2 = firebaseDatabase.getReference().child("sensor").child("PMS7003");
+        DatabaseReference rootRef_MQ2 = firebaseDatabase.getReference().child("sensor").child("mq-2"); // () 안에 아무것도 안 쓰면 최상위 노드드
+        DatabaseReference rootRef_PMS = firebaseDatabase.getReference().child("sensor").child("PMS7003");
+        DatabaseReference rootRef_MOS = firebaseDatabase.getReference().child("sensor").child("temperature");
 
+        //가스센서 함수
+        rootRef_MQ2.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String data = (String) dataSnapshot.getValue().toString();
+                COValue.setText(data);
+                COProgressBar.setProgress((int) Double.parseDouble(data));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                //Log.e("MainActivity", String.valueOf(databaseError.toException())); // 에러문 출력
+            }
+        });
+
+        //미세먼지 함수
+        rootRef_PMS.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String data = (String) dataSnapshot.getValue().toString();
+                DustValue.setText(data);
+                dustProgressBar.setProgress((int) Double.parseDouble(data));
+
+                //push 알림
+                if ((int) Double.parseDouble(data) > 1500)
+                    sendOnChannel1("경고", "미세먼지 수치가" + Integer.parseInt(data) + "입니다");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                //Log.e("MainActivity", String.valueOf(databaseError.toException())); // 에러문 출력
+            }
+        });
+
+        /*
+        //습도센서 함수
+        rootRef_PMS.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String data = (String) dataSnapshot.getValue().toString();
+                moistureValue.setText(data);
+                dustProgressBar.setProgress((int) Double.parseDouble(data));
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                //Log.e("MainActivity", String.valueOf(databaseError.toException())); // 에러문 출력
+            }
+        });
+
+*/
+/*
+
+//가스센서 함수
         ChildEventListener mChildEventListener;
         mChildEventListener = new ChildEventListener() {
+
 
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -304,6 +365,8 @@ public class HomeWorkerFragment extends Fragment {
                 COProgressBar.setProgress((int) Double.parseDouble(data));
 
             }
+
+
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -377,7 +440,7 @@ public class HomeWorkerFragment extends Fragment {
             }
         };
         rootRef2.addChildEventListener(dustChildEventListener);
-
+*/
     }
 
     // push 알림 함수
