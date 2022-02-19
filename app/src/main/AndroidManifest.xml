@@ -18,7 +18,13 @@
         android:theme="@style/Theme.SafetyManagementApp"
         android:usesCleartextTraffic="true">
 
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".CameraActivity" />
         android:theme="@style/Theme.SafetyManagementApp">
 
@@ -27,11 +33,6 @@
         <activity android:name=".Sensor" />
         <activity android:name=".FireWarningActivity" />
         <activity android:name=".HelmetCapture">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".NoticeWriteActivity"></activity>

@@ -12,8 +12,9 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_camera);
-        mWebView = (WebView) findViewById(R.id.mWebView);
+        //setContentView(R.layout.activity_camera);
+        setContentView(R.layout.activity_cctv);
+        //mWebView = (WebView) findViewById(R.id.mWebView);
         mWebView.setWebViewClient(new WebViewClient()); // 클릭시 새창 안뜨게
         mWebSettings = mWebView.getSettings(); //세부 세팅 등록
         mWebSettings.setJavaScriptEnabled(true); // 웹페이지 자바스클비트 허용 여부
