@@ -1,12 +1,12 @@
 package com.example.safetymanagementapp;
 
 public class Data {
-    int imageUrl;
+    String imageUrl;
     String time;
     String location;
 
 
-    public Data(int imageUrl, String time, String location) {
+    public Data(String imageUrl, String time, String location) {
         this.imageUrl = imageUrl;
         this.time = time;
         this.location = location;
@@ -28,11 +28,11 @@ public class Data {
         this.location = location;
     }
 
-    public int getImageUrl() {
+    public String getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(int imageUrl) {
+    public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 }
