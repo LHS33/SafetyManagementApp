@@ -31,7 +31,6 @@ public class HelmetAdapter extends RecyclerView.Adapter<HelmetAdapter.HelmetView
     private Context context;
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageReference = storage.getReference();
-    Uri imageUri;
 
     public HelmetAdapter(ArrayList<Capture> arrayList, Context context) {
         this.arrayList = arrayList;
@@ -57,7 +56,6 @@ public class HelmetAdapter extends RecyclerView.Adapter<HelmetAdapter.HelmetView
                 Glide.with(holder.itemView)
                         .load(uri)
                         .into(holder.iv_imageUrl);
-                imageUri = uri;
             }
         });
         // 장소 출력
@@ -97,9 +95,23 @@ public class HelmetAdapter extends RecyclerView.Adapter<HelmetAdapter.HelmetView
                 @Override
                 public void onClick(View view) {
                     ImageView iv_dialog = dialog1.findViewById(R.id.dialog_image);
-                    Glide.with((HelmetActivity)context).load(imageUri).into(iv_dialog);
+                    int pos = getAbsoluteAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION) {
+                        Capture item = arrayList.get(pos);
+                        String item_name = item.getFileName();
+                        StorageReference captureRef = storageReference.child("capture_image/"+item_name);
+                        captureRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                Glide.with((HelmetActivity)context)
+                                        .load(uri)
+                                        .into(iv_dialog);
+                            }
+                        });
+                    }
                     dialog1.show();
 
+                    // 확인 버튼 클릭
                     dialog1.findViewById(R.id.okBtn).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
