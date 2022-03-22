@@ -71,7 +71,8 @@ public class HomeAdminFragment extends Fragment {
         btnHardHat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getActivity(), HelmetActivity.class);
+                startActivity(intent);
             }
         });
 
