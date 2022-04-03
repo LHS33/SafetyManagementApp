@@ -295,6 +295,7 @@ public class HomeWorkerFragment extends Fragment {
         DatabaseReference rootRef_MQ2 = firebaseDatabase.getReference().child("sensor").child("mq-2"); // () 안에 아무것도 안 쓰면 최상위 노드드
         DatabaseReference rootRef_PMS = firebaseDatabase.getReference().child("sensor").child("PMS7003");
         DatabaseReference rootRef_MOS = firebaseDatabase.getReference().child("sensor").child("temperature");
+        DatabaseReference rootRef_HELMET = firebaseDatabase.getReference().child("cameraSensor").child("new"); //helmet
 
         //가스센서 함수
         rootRef_MQ2.addValueEventListener(new ValueEventListener() {
@@ -324,6 +325,24 @@ public class HomeWorkerFragment extends Fragment {
                 //push 알림
                 if ((int) Double.parseDouble(data) > 1500)
                     sendOnChannel1("경고", "미세먼지 수치가" + Integer.parseInt(data) + "입니다");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                //Log.e("MainActivity", String.valueOf(databaseError.toException())); // 에러문 출력
+            }
+        });
+
+        //안전모 함수
+        rootRef_HELMET.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String data = (String) dataSnapshot.getValue().toString();
+
+                //push 알림
+                if ((int) Double.parseDouble(data) == 1)
+                    sendOnChannel1("경고", "안전모를 쓰지 않은 근로자가 발견되었습니다.");
             }
 
             @Override
@@ -446,6 +465,7 @@ public class HomeWorkerFragment extends Fragment {
     // push 알림 함수
     public void sendOnChannel1(String title, String message) {
         NotificationCompat.Builder nb = mNotificationhelper.getChannel1Notification(title, message);
+        nb.setSmallIcon(R.drawable.ic_launcher_foreground);
         mNotificationhelper.getManager().notify(1, nb.build());
     }
 
