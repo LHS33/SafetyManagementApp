@@ -51,8 +51,8 @@ public class NoticeWriteActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Intent intent = getIntent();
 
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼
-        //getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼
+        getSupportActionBar().setTitle("공지사항 입력");
 
         mDBhelper = new DBHelper(this);
         db = mDBhelper.getWritableDatabase();

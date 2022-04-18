@@ -34,7 +34,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ConstructionFragmentsy extends Fragment {
-    private LineChart mChart;
+    private LineChart mChart_MQ2;
+    private LineChart mChart_humi;
+    private LineChart mChart_PMS;
+
     private View view;
     private FirebaseDatabase mDatabase;
     private LimitLine limit_up, limit_down;
@@ -50,19 +53,28 @@ public class ConstructionFragmentsy extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_construction, container, false);
 
-        mChart = view.findViewById(R.id.linechart);
-        mChart.setNoDataText("데이터를 불러오는 중입니다.");
-        mChart.setNoDataTextColor(Color.BLUE);
         mDatabase = FirebaseDatabase.getInstance();
+
+        mChart_MQ2 = view.findViewById(R.id.linechart);
+        mChart_MQ2.setNoDataText("로딩중");
+        mChart_MQ2.setNoDataTextColor(Color.BLUE);
+        mChart_humi = view.findViewById(R.id.linechart_humidity);
+        mChart_humi.setNoDataText("로딩중");
+        mChart_humi.setNoDataTextColor(Color.BLUE);
+        mChart_PMS = view.findViewById(R.id.linechart_PMS);
+        mChart_PMS.setNoDataText("로딩중");
+        mChart_PMS.setNoDataTextColor(Color.BLUE);
         
-        showLineChartData();
+        showLineChartData(mDatabase.getReference().child("recordSensor").child("humidity"), mChart_humi);
+        showLineChartData(mDatabase.getReference().child("recordSensor").child("PMS7003"), mChart_PMS);
+        showLineChartData(mDatabase.getReference().child("recordSensor").child("mq-2"), mChart_MQ2);
 
         return view;
     }
 
-    private void showLineChartData() {
+    private void showLineChartData(DatabaseReference ref, LineChart mChart) {
         //ref = mDatabase.getReference().child("recordSensor").child("220129-0400").child("mq-2");
-        ref = mDatabase.getReference().child("recordSensor").child("mq-2");
+        //ref = mDatabase.getReference().child("recordSensor").child("mq-2");
         final ArrayList<Double> sensorDatas = new ArrayList<>(); //센서값 배열
         final ArrayList<String> xEntry= new ArrayList<>(); //타임스탬프 배열
 
@@ -139,7 +151,7 @@ public class ConstructionFragmentsy extends Fragment {
                         }
                         float average = total / sensorDatas.size();
 
-                        LineDataSet set1 = new LineDataSet(yData, "평균값 : " + average);
+                        LineDataSet set1 = new LineDataSet(yData, "평균 : " + average);
 
                         dataSets.add(set1);
                         LineData data2 = new LineData(dataSets);

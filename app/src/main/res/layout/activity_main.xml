@@ -20,6 +20,17 @@
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+            <TextView
+                android:id="@+id/tbarText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textStyle="bold"
+                android:textSize="23dp"
+                android:text="안전관리시스템"
+                android:textColor="#FFFFFF"/>
+
         </androidx.appcompat.widget.Toolbar>
 
     </LinearLayout>

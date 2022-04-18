@@ -50,6 +50,12 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 
+import org.altbeacon.beacon.Beacon;
+import org.altbeacon.beacon.BeaconManager;
+import org.altbeacon.beacon.BeaconParser;
+import org.altbeacon.beacon.MonitorNotifier;
+import org.altbeacon.beacon.RangeNotifier;
+import org.altbeacon.beacon.Region;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,6 +73,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 
 public class HomeWorkerFragment extends Fragment {
@@ -75,10 +83,11 @@ public class HomeWorkerFragment extends Fragment {
     ProgressBar moistureProgressBar;
     ProgressBar dustProgressBar;
     ProgressBar COProgressBar;
-    int moistureValue;
-    int dustValue;
+    //int moistureValue;
+    //int dustValue;
     TextView COValue;
     TextView DustValue;
+    TextView MoistureValue;
     TextView Today;
     TextView Weather;
     ViewPager viewPager;
@@ -107,6 +116,14 @@ public class HomeWorkerFragment extends Fragment {
     private static final int PERMISSIONS_REQUEST_CODE = 100;
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 
+    BeaconManager beaconManager;
+    private List<Beacon> beaconList = new ArrayList<>();
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference rootRef_MQ2;
+    DatabaseReference rootRef_PMS;
+    DatabaseReference rootRef_MOS;
+    TextView areaName;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -133,9 +150,16 @@ public class HomeWorkerFragment extends Fragment {
         Weather = view.findViewById(R.id.tVWeather);
         COValue = view.findViewById(R.id.tVCOValue);
         DustValue = view.findViewById(R.id.tVDustValue);
+        MoistureValue = view.findViewById(R.id.tVMoistureValue);
 
         viewPager = view.findViewById(R.id.notice_viewPager);
         noticeViewPagerAdapter = new NoticeViewPagerAdapter(getChildFragmentManager());
+
+        beaconManager = BeaconManager.getInstanceForApplication(getActivity());
+        beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
+        //Firebase 실시간 DB 관리 객체 얻어오기
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        areaName = view.findViewById(R.id.areaName);
 
         fireStoreDB.collection("notices").orderBy("date", Query.Direction.DESCENDING)
                 .get()
@@ -183,7 +207,7 @@ public class HomeWorkerFragment extends Fragment {
         Today.setText(getTime());
 
         //데이터베이스 센서 값 받아오기
-        getSensorValue();
+        //getSensorValue();
 
         //위도, 경도 받아오기 위한 권한 설정
         if (checkLocationServicesStatus()) {
@@ -224,19 +248,135 @@ public class HomeWorkerFragment extends Fragment {
         ny = Integer.toString(i_longitude);
          */
 
+        beaconManager.addMonitorNotifier(new MonitorNotifier() {
+            @Override
+            public void didEnterRegion(Region region) {
+                //Log.i(TAG, "I just saw an beacon for the first time!");
+                Log.i("HomeWorkerFragment_addMonitorNotifier", "I just saw an beacon for the first time! Id1->"+region.getId1()+" id 2:"+region.getId2()+" id 3:"+region.getId3());
+            }
+
+            @Override
+            public void didExitRegion(Region region) {
+                Log.i("HomeWorkerFragment_addMonitorNotifier", "I no longer see an beacon");
+            }
+
+            @Override
+            public void didDetermineStateForRegion(int state, Region region) { //state 1이 보이는거. 0이 안보이는거.
+                Log.i("HomeWorkerFragment_addMonitorNotifier", "I have just switched from seeing/not seeing beacons: " + state);
+                Log.i("HomeWorkerFragment_addMonitorNotifier", "I just saw an beacon for the first time! Id1->"+region.getId1()+" id 2:"+region.getId2()+" id 3:"+region.getId3());
+            }
+
+        });
+
+        beaconManager.addRangeNotifier(new RangeNotifier() {
+            @Override
+            public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
+                List<Beacon> list = (List<Beacon>) beacons;
+                if (beacons.size() > 0) {
+                    /*
+                    Log.d(TAG, "The First beacon I see is about " + beacons.iterator().next().getDistance() + "meters away");
+                    Log.d(TAG, "This UUID : " + beacons.iterator().next().getId1().toString());
+                    Log.d(TAG, "This Major : " + beacons.iterator().next().getId2().toString());
+                    Log.d(TAG, "This Minor : " + beacons.iterator().next().getId3().toString());
+                    Log.d(TAG, "This txPower : " + beacons.iterator().next().getTxPower());
+                    Log.d(TAG, "This Rssi : " + beacons.iterator().next().getRssi());
+                    */
+
+                    int log_txPower = beacons.iterator().next().getTxPower();
+                    double log_rssi = beacons.iterator().next().getRssi();
+                    double log_distance = calculateDistance(log_txPower, log_rssi);
+                    Log.d("beacon_UUID", "This UUID : " + beacons.iterator().next().getId1().toString() +" This calculateDistance : " + log_distance);
+
+                    beaconList.clear();
+                    for(Beacon beacon : beacons){
+                        beaconList.add(beacon);
+                    }
+
+                    String beacon_UUID = "";
+                    double distance = 99999.0;
+                    for(Beacon beacon : beaconList){
+                        int txPower = beacon.getTxPower();
+                        double rssi = beacon.getRssi();
+                        double distance_tmp = calculateDistance(txPower, rssi);
+                        if(distance > distance_tmp){
+                            distance = distance_tmp;
+                            beacon_UUID = beacon.getId1().toString();
+                            //tv_message.setText(beacon_UUID);
+                        }
+                    }
+                    //UUID에 따라서 db 경로 설정하는 코드.
+                    if(beacon_UUID.contains("d1ad07a961")){
+                        areaName.setText("공사장1");
+                        rootRef_MQ2 = firebaseDatabase.getReference().child("sensor").child("mq-2"); // () 안에 아무것도 안 쓰면 최상위 노드드
+                        rootRef_PMS = firebaseDatabase.getReference().child("sensor").child("PMS7003");
+                        rootRef_MOS = firebaseDatabase.getReference().child("sensor").child("humidity");
+                        //데이터베이스 센서 값 받아오기
+                        getSensorValue(rootRef_MQ2, COValue, COProgressBar);
+                        getSensorValue(rootRef_PMS, DustValue, dustProgressBar);
+                        getSensorValue(rootRef_MOS, MoistureValue, moistureProgressBar);
+                    } else{
+                        areaName.setText("공사장2");
+                        rootRef_MQ2 = firebaseDatabase.getReference().child("sensor2").child("mq-2"); // () 안에 아무것도 안 쓰면 최상위 노드드
+                        rootRef_PMS = firebaseDatabase.getReference().child("sensor2").child("PMS7003");
+                        rootRef_MOS = firebaseDatabase.getReference().child("sensor2").child("humidity");
+                        //데이터베이스 센서 값 받아오기
+                        getSensorValue(rootRef_MQ2, COValue, COProgressBar);
+                        getSensorValue(rootRef_PMS, DustValue, dustProgressBar);
+                        getSensorValue(rootRef_MOS, MoistureValue, moistureProgressBar);
+                    }
+
+
+                }else if(beacons.size()<=0){
+                    Log.e("HomeWorkerFragment_beaconsSize", "beacons size < 0");
+                    rootRef_MQ2 = firebaseDatabase.getReference().child("sensor").child("mq-2"); // () 안에 아무것도 안 쓰면 최상위 노드드
+                    rootRef_PMS = firebaseDatabase.getReference().child("sensor").child("PMS7003");
+                    rootRef_MOS = firebaseDatabase.getReference().child("sensor").child("humidity");
+                    getSensorValue(rootRef_MQ2, COValue, COProgressBar);
+                    getSensorValue(rootRef_PMS, DustValue, dustProgressBar);
+                    getSensorValue(rootRef_MOS, MoistureValue, moistureProgressBar);
+                }
+
+            }
+
+        });
+        beaconManager.startMonitoring(new Region("myMonitoringUniqueId", null, null, null));
+        beaconManager.startRangingBeacons(new Region("myMonitoringUniqueId", null, null, null));
 
         mNotificationhelper = new NotificationHelper(mContext);
         new Thread(() -> {
-        try {
-            lookUpWeather();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (Exception e ){
-            e.printStackTrace();
-        }
+            try {
+                lookUpWeather();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (Exception e ){
+                e.printStackTrace();
+            }
         }).start();
+
+        DatabaseReference rootRef_HELMET = firebaseDatabase.getReference().child("cameraSensor").child("new"); //helmet
+
+        //안전모 함수
+        rootRef_HELMET.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String data = (String) dataSnapshot.getValue().toString();
+
+                //push 알림
+                if ((int) Double.parseDouble(data) == 1)
+                    sendOnChannel1("경고", "안전모를 쓰지 않은 근로자가 발견되었습니다.");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                //Log.e("MainActivity", String.valueOf(databaseError.toException())); // 에러문 출력
+            }
+        });
+
+
+
         return view;
     }
 
@@ -282,21 +422,42 @@ public class HomeWorkerFragment extends Fragment {
     }
 
 
-    public void getSensorValue() {
+    public void getSensorValue(DatabaseReference ref, TextView sensorName, ProgressBar progressBar) {
         /*
         추후에 습도, 먼지, 일산화탄소 값 db에서 받아오는 코드 추가.
         받아온 값을 정수형으로 변환한 다음 프로그레스바 설정해줌.
          */
 
         //Firebase 실시간 DB 관리 객체 얻어오기
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        //FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 
         //저장시킬 노드 참조객체 가져오기
-        DatabaseReference rootRef_MQ2 = firebaseDatabase.getReference().child("sensor").child("mq-2"); // () 안에 아무것도 안 쓰면 최상위 노드드
-        DatabaseReference rootRef_PMS = firebaseDatabase.getReference().child("sensor").child("PMS7003");
-        DatabaseReference rootRef_MOS = firebaseDatabase.getReference().child("sensor").child("temperature");
-        DatabaseReference rootRef_HELMET = firebaseDatabase.getReference().child("cameraSensor").child("new"); //helmet
+        //DatabaseReference rootRef_MQ2 = firebaseDatabase.getReference().child("sensor").child("mq-2"); // () 안에 아무것도 안 쓰면 최상위 노드드
+        //DatabaseReference rootRef_PMS = firebaseDatabase.getReference().child("sensor").child("PMS7003");
+        //DatabaseReference rootRef_MOS = firebaseDatabase.getReference().child("sensor").child("humidity");
 
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String data = (String) dataSnapshot.getValue().toString();
+                sensorName.setText(data);
+                progressBar.setProgress((int) Double.parseDouble(data));
+                Log.e("HomeWorkerFragment_getSensorValue", data);
+                //push 알림
+                if(ref.toString().contains("PMS")){
+                    Log.e("HomeWorkerFragment_getSensorValue", ref.toString());
+                    if ((int) Double.parseDouble(data) > 1500)
+                        sendOnChannel1("경고", "미세먼지 수치가" + Integer.parseInt(data) + "입니다");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        /*
         //가스센서 함수
         rootRef_MQ2.addValueEventListener(new ValueEventListener() {
 
@@ -333,133 +494,22 @@ public class HomeWorkerFragment extends Fragment {
             }
         });
 
-        //안전모 함수
-        rootRef_HELMET.addValueEventListener(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String data = (String) dataSnapshot.getValue().toString();
-
-                //push 알림
-                if ((int) Double.parseDouble(data) == 1)
-                    sendOnChannel1("경고", "안전모를 쓰지 않은 근로자가 발견되었습니다.");
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                //Log.e("MainActivity", String.valueOf(databaseError.toException())); // 에러문 출력
-            }
-        });
-
-        /*
         //습도센서 함수
-        rootRef_PMS.addValueEventListener(new ValueEventListener() {
-
+        rootRef_MOS.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String data = (String) dataSnapshot.getValue().toString();
-                moistureValue.setText(data);
-                dustProgressBar.setProgress((int) Double.parseDouble(data));
-
+                MoistureValue.setText(data);
+                moistureProgressBar.setProgress((int) Double.parseDouble(data));
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                //Log.e("MainActivity", String.valueOf(databaseError.toException())); // 에러문 출력
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
+        */
 
-*/
-/*
-
-//가스센서 함수
-        ChildEventListener mChildEventListener;
-        mChildEventListener = new ChildEventListener() {
-
-
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                String data = (String) snapshot.getValue().toString();
-                COValue.setText(data);
-                COProgressBar.setProgress((int) Double.parseDouble(data));
-
-            }
-
-
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                String data = (String) snapshot.getValue().toString();
-                COValue.setText(data);
-                COProgressBar.setProgress((int) Double.parseDouble(data));
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-
-            }
-        };
-        rootRef.addChildEventListener(mChildEventListener);
-
-//미세먼지 함수
-        ChildEventListener dustChildEventListener;
-        dustChildEventListener = new ChildEventListener() {
-
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                String data = (String) snapshot.getValue().toString();
-                DustValue.setText(data);
-                dustProgressBar.setProgress((int) Double.parseDouble(data));
-
-                //push 알림
-                if ((int) Double.parseDouble(data) > 1500)
-                    sendOnChannel1("경고", "미세먼지 수치가" + Integer.parseInt(data) + "입니다");
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                String data = (String) snapshot.getValue().toString();
-                DustValue.setText(data);
-                dustProgressBar.setProgress((int) Double.parseDouble(data));
-
-                //push 알림
-                if ((int) Double.parseDouble(data) > 1500)
-                    sendOnChannel1("경고", "미세먼지 수치가" + Integer.parseInt(data) + "입니다");
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-
-            }
-        };
-        rootRef2.addChildEventListener(dustChildEventListener);
-*/
     }
 
     // push 알림 함수
@@ -629,27 +679,27 @@ public class HomeWorkerFragment extends Fragment {
         LocalTime nowTime = LocalTime.now();
         DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HHmm");
 
-        //String nx = "60";	//위도
-        //String ny = "125";	//경도
-        String baseDate = nowDate.format(formatterDate);	//조회하고싶은 날짜
-       String baseTime =  getLastBaseTime().format(formatterTime);	//조회하고싶은 시간
+        //String nx = "60";    //위도
+        //String ny = "125";   //경도
+        String baseDate = nowDate.format(formatterDate);   //조회하고싶은 날짜
+        String baseTime =  getLastBaseTime().format(formatterTime); //조회하고싶은 시간
 
         System.out.println("time : "+ getLastBaseTime());
         //String baseTime= "0500";
-        String type = "json";	//조회하고 싶은 type(json, xml 중 고름)
+        String type = "json";  //조회하고 싶은 type(json, xml 중 고름)
 
         String weather = null;
         String tmperature=null;
 
         String apiUrl = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst";
 //      홈페이지에서 받은 키
-       String serviceKey = "Yvgu9A%2BZAvc3h4ok1csvEzNN8mBLy3g0bj%2FB7uhTkGPbaQ49fnVIxR78irZKiokYcoTilrEgRiijbW9fa4r0lg%3D%3D";
+        String serviceKey = "Yvgu9A%2BZAvc3h4ok1csvEzNN8mBLy3g0bj%2FB7uhTkGPbaQ49fnVIxR78irZKiokYcoTilrEgRiijbW9fa4r0lg%3D%3D";
 
-      //  String serviceKey = "QT7gSdbs%2BFgYe3X7qwE9QyKXlpo5CE9fq7Qaa3xLX5vI4TKPyzyI0WKXZ5JeH9r85uiZQHiGbwBKUD3Lm48Nqg%3D%3D";
+        //  String serviceKey = "QT7gSdbs%2BFgYe3X7qwE9QyKXlpo5CE9fq7Qaa3xLX5vI4TKPyzyI0WKXZ5JeH9r85uiZQHiGbwBKUD3Lm48Nqg%3D%3D";
         StringBuilder urlBuilder = new StringBuilder(apiUrl);
         urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "=" + serviceKey);
-   //     urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode(numOfRows, "UTF-8"));
-   //     urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode(pageNo, "UTF-8"));
+        //     urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode(numOfRows, "UTF-8"));
+        //     urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode(pageNo, "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("nx", "UTF-8") + "=" + URLEncoder.encode(nx, "UTF-8")); //경도
         urlBuilder.append("&" + URLEncoder.encode("ny", "UTF-8") + "=" + URLEncoder.encode(ny, "UTF-8")); //위도
         urlBuilder.append("&" + URLEncoder.encode("base_date", "UTF-8") + "=" + URLEncoder.encode(baseDate, "UTF-8")); /* 조회하고싶은 날짜*/
@@ -686,61 +736,61 @@ public class HomeWorkerFragment extends Fragment {
 
         //=======이 밑에 부터는 json에서 데이터 파싱해 오는 부분이다=====//
         // json 키를 가지고 데이터를 파싱
-try {
+        try {
 
-   // json = json.replace("\\\"","'");
-    JSONObject jsonObj_1 = new JSONObject(json);
-    //JSONObject jsonObj_1 = new JSONObject("{"+ json+"}");
-    String response = jsonObj_1.getString("response");
+            // json = json.replace("\\\"","'");
+            JSONObject jsonObj_1 = new JSONObject(json);
+            //JSONObject jsonObj_1 = new JSONObject("{"+ json+"}");
+            String response = jsonObj_1.getString("response");
 
-    System.out.println("response"+response);
-    System.out.println("jsonOjb_1"+jsonObj_1);
+            System.out.println("response"+response);
+            System.out.println("jsonOjb_1"+jsonObj_1);
 
 
-    // response 로 부터 body 찾기
-    JSONObject jsonObj_2 = new JSONObject(response);
-    String body = jsonObj_2.getString("body");
+            // response 로 부터 body 찾기
+            JSONObject jsonObj_2 = new JSONObject(response);
+            String body = jsonObj_2.getString("body");
 
-    // body 로 부터 items 찾기
-    JSONObject jsonObj_3 = new JSONObject(body);
-    String items = jsonObj_3.getString("items");
-    Log.i("ITEMS", items);
+            // body 로 부터 items 찾기
+            JSONObject jsonObj_3 = new JSONObject(body);
+            String items = jsonObj_3.getString("items");
+            Log.i("ITEMS", items);
 
-    // items로 부터 itemlist 를 받기
-    JSONObject jsonObj_4 = new JSONObject(items);
-    JSONArray jsonArray = jsonObj_4.getJSONArray("item");
+            // items로 부터 itemlist 를 받기
+            JSONObject jsonObj_4 = new JSONObject(items);
+            JSONArray jsonArray = jsonObj_4.getJSONArray("item");
 
-        for (int i = 0; i < jsonArray.length(); i++) {
-            jsonObj_4 = jsonArray.getJSONObject(i);
-            String fcstValue = jsonObj_4.getString("fcstValue");
-            String category = jsonObj_4.getString("category");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj_4 = jsonArray.getJSONObject(i);
+                String fcstValue = jsonObj_4.getString("fcstValue");
+                String category = jsonObj_4.getString("category");
 
-            if (category.equals("SKY")) {
-                weather = "현재 날씨는 ";
-                if (fcstValue.equals("1")) {
-                    weather += "맑은 상태로 ";
-                } else if (fcstValue.equals("2")) {
-                    weather += "비가 오는 상태로 ";
-                } else if (fcstValue.equals("3")) {
-                    weather += "구름이 많은 상태로 ";
-                } else if (fcstValue.equals("4")) {
-                    weather += "흐린 상태로 ";
+                if (category.equals("SKY")) {
+                    weather = "현재 날씨는 ";
+                    if (fcstValue.equals("1")) {
+                        weather += "맑은 상태로 ";
+                    } else if (fcstValue.equals("2")) {
+                        weather += "비가 오는 상태로 ";
+                    } else if (fcstValue.equals("3")) {
+                        weather += "구름이 많은 상태로 ";
+                    } else if (fcstValue.equals("4")) {
+                        weather += "흐린 상태로 ";
+                    }
                 }
+
+
+                if ( category.equals("TMP")) {
+                    tmperature = "기온은 " + fcstValue + "℃ 입니다.";
+                }
+                Log.i("WEATHER_TAG", weather + tmperature);
+                Weather.setText(weather + tmperature);
             }
 
 
-            if ( category.equals("TMP")) {
-                tmperature = "기온은 " + fcstValue + "℃ 입니다.";
-            }
-            Log.i("WEATHER_TAG", weather + tmperature);
-            Weather.setText(weather + tmperature);
+
+        }catch (JSONException e) {
+            System.out.println(e.getMessage());
         }
-
-
-
-}catch (JSONException e) {
-    System.out.println(e.getMessage());
-}
 
 
     }
@@ -762,4 +812,20 @@ try {
         }
 
     }
+
+    //비콘 거리 계산 함수
+    protected static double calculateDistance(int txPower, double rssi){
+        if(rssi == 0){
+            return -1.0;
+        }
+        double ratio = rssi*1.0/txPower;
+        if(ratio < 1.0){
+            return Math.pow(ratio, 10);
+        }else{
+            double distance = (0.89976)*Math.pow(ratio, 7.7095) + 0.111;
+            return distance;
+        }
+    }
+
 }
+

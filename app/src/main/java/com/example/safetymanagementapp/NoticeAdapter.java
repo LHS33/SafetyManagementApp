@@ -36,6 +36,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
 
         boolean isExpandable = items.get(position).isExpandable();
         holder.expandableLayout.setVisibility(isExpandable ? View.VISIBLE : View.GONE);
+        holder.notice_click.setImageResource(isExpandable ? R.drawable.free_icon_up_arrow_angle_54817 : R.drawable.free_icon_down_arrow_54785);
     }
 
     @Override
@@ -60,7 +61,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
             notice_click = itemView.findViewById(R.id.notice_click);
             expandableLayout = itemView.findViewById(R.id.expandable_layout);
 
-            notice_click.setOnClickListener(new View.OnClickListener() {
+            layoutNotice.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Notice notice = items.get(getAdapterPosition());
