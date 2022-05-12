@@ -123,6 +123,9 @@ public class HomeWorkerFragment extends Fragment {
     DatabaseReference rootRef_PMS;
     DatabaseReference rootRef_MOS;
     TextView areaName;
+    String PMS_now_data_1 = "";
+    String PMS_now_data_2 = "";
+    String UUID = "";
 
     @Override
     public void onAttach(Context context) {
@@ -160,6 +163,7 @@ public class HomeWorkerFragment extends Fragment {
         //Firebase 실시간 DB 관리 객체 얻어오기
         firebaseDatabase = FirebaseDatabase.getInstance();
         areaName = view.findViewById(R.id.areaName);
+        UUID="";
 
         fireStoreDB.collection("notices").orderBy("date", Query.Direction.DESCENDING)
                 .get()
@@ -248,6 +252,19 @@ public class HomeWorkerFragment extends Fragment {
         ny = Integer.toString(i_longitude);
          */
 
+        mNotificationhelper = new NotificationHelper(mContext);
+        new Thread(() -> {
+            try {
+                lookUpWeather();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (Exception e ){
+                e.printStackTrace();
+            }
+        }).start();
+
         beaconManager.addMonitorNotifier(new MonitorNotifier() {
             @Override
             public void didEnterRegion(Region region) {
@@ -304,36 +321,43 @@ public class HomeWorkerFragment extends Fragment {
                             //tv_message.setText(beacon_UUID);
                         }
                     }
-                    //UUID에 따라서 db 경로 설정하는 코드.
-                    if(beacon_UUID.contains("d1ad07a961")){
-                        areaName.setText("공사장1");
-                        rootRef_MQ2 = firebaseDatabase.getReference().child("sensor").child("mq-2"); // () 안에 아무것도 안 쓰면 최상위 노드드
-                        rootRef_PMS = firebaseDatabase.getReference().child("sensor").child("PMS7003");
-                        rootRef_MOS = firebaseDatabase.getReference().child("sensor").child("humidity");
-                        //데이터베이스 센서 값 받아오기
-                        getSensorValue(rootRef_MQ2, COValue, COProgressBar);
-                        getSensorValue(rootRef_PMS, DustValue, dustProgressBar);
-                        getSensorValue(rootRef_MOS, MoistureValue, moistureProgressBar);
-                    } else{
-                        areaName.setText("공사장2");
-                        rootRef_MQ2 = firebaseDatabase.getReference().child("sensor2").child("mq-2"); // () 안에 아무것도 안 쓰면 최상위 노드드
-                        rootRef_PMS = firebaseDatabase.getReference().child("sensor2").child("PMS7003");
-                        rootRef_MOS = firebaseDatabase.getReference().child("sensor2").child("humidity");
-                        //데이터베이스 센서 값 받아오기
-                        getSensorValue(rootRef_MQ2, COValue, COProgressBar);
-                        getSensorValue(rootRef_PMS, DustValue, dustProgressBar);
-                        getSensorValue(rootRef_MOS, MoistureValue, moistureProgressBar);
+
+                    if(!UUID.equals(beacon_UUID)) {
+                        UUID=beacon_UUID;
+                        Log.e("UUID_equals UUID: ", UUID);
+                        Log.e("UUID_equals beacon_UUID: ", beacon_UUID);
+                        //UUID에 따라서 db 경로 설정하는 코드.
+                        if (beacon_UUID.contains("d1ad07a961")) {
+                            areaName.setText("공사장1");
+                            rootRef_MQ2 = firebaseDatabase.getReference().child("sensor").child("mq-2"); // () 안에 아무것도 안 쓰면 최상위 노드드
+                            rootRef_PMS = firebaseDatabase.getReference().child("sensor").child("PMS7003");
+                            rootRef_MOS = firebaseDatabase.getReference().child("sensor").child("humidity");
+                            //데이터베이스 센서 값 받아오기
+                            getSensorValue(rootRef_MQ2, COValue, COProgressBar);
+                            getSensorValue(rootRef_PMS, DustValue, dustProgressBar);
+                            getSensorValue(rootRef_MOS, MoistureValue, moistureProgressBar);
+                        } else {
+                            areaName.setText("공사장2");
+                            rootRef_MQ2 = firebaseDatabase.getReference().child("sensor2").child("mq-2"); // () 안에 아무것도 안 쓰면 최상위 노드드
+                            rootRef_PMS = firebaseDatabase.getReference().child("sensor2").child("PMS7003");
+                            rootRef_MOS = firebaseDatabase.getReference().child("sensor2").child("humidity");
+                            //데이터베이스 센서 값 받아오기
+                            getSensorValue(rootRef_MQ2, COValue, COProgressBar);
+                            getSensorValue(rootRef_PMS, DustValue, dustProgressBar);
+                            getSensorValue(rootRef_MOS, MoistureValue, moistureProgressBar);
+                        }
                     }
 
-
                 }else if(beacons.size()<=0){
-                    Log.e("HomeWorkerFragment_beaconsSize", "beacons size < 0");
+                    Log.e("HomeWorkerFragment_beaconsSize", "beacons size <= 0");
+                    /*
                     rootRef_MQ2 = firebaseDatabase.getReference().child("sensor").child("mq-2"); // () 안에 아무것도 안 쓰면 최상위 노드드
                     rootRef_PMS = firebaseDatabase.getReference().child("sensor").child("PMS7003");
                     rootRef_MOS = firebaseDatabase.getReference().child("sensor").child("humidity");
                     getSensorValue(rootRef_MQ2, COValue, COProgressBar);
                     getSensorValue(rootRef_PMS, DustValue, dustProgressBar);
                     getSensorValue(rootRef_MOS, MoistureValue, moistureProgressBar);
+*/
                 }
 
             }
@@ -341,19 +365,6 @@ public class HomeWorkerFragment extends Fragment {
         });
         beaconManager.startMonitoring(new Region("myMonitoringUniqueId", null, null, null));
         beaconManager.startRangingBeacons(new Region("myMonitoringUniqueId", null, null, null));
-
-        mNotificationhelper = new NotificationHelper(mContext);
-        new Thread(() -> {
-            try {
-                lookUpWeather();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (Exception e ){
-                e.printStackTrace();
-            }
-        }).start();
 
         DatabaseReference rootRef_HELMET = firebaseDatabase.getReference().child("cameraSensor").child("new"); //helmet
 
@@ -442,13 +453,44 @@ public class HomeWorkerFragment extends Fragment {
                 String data = (String) dataSnapshot.getValue().toString();
                 sensorName.setText(data);
                 progressBar.setProgress((int) Double.parseDouble(data));
-                Log.e("HomeWorkerFragment_getSensorValue", data);
                 //push 알림
-                if(ref.toString().contains("PMS")){
-                    Log.e("HomeWorkerFragment_getSensorValue", ref.toString());
-                    if ((int) Double.parseDouble(data) > 1500)
-                        sendOnChannel1("경고", "미세먼지 수치가" + Integer.parseInt(data) + "입니다");
+                if ((int) Double.parseDouble(data) > 1500){
+                    sendOnChannel1("경고", "미세먼지 수치가" + Integer.parseInt(data) + "입니다");
                 }
+
+                /*
+                if(ref.toString().contains("PMS")){
+                    if(ref.toString().contains("(sensor)")){
+                        if(PMS_now_data_1.indexOf(data)<0){
+                            PMS_now_data_1 = data;
+                            Log.e("now_data_1", PMS_now_data_1);
+                            Log.e("get_data_1", data);
+                            sensorName.setText(data);
+                            progressBar.setProgress((int) Double.parseDouble(data));
+                            //push 알림
+                            if ((int) Double.parseDouble(data) > 1500){
+                                sendOnChannel1("경고", "미세먼지 수치가" + Integer.parseInt(data) + "입니다");
+                            }
+                        }
+                    }else{
+                        if(PMS_now_data_2.indexOf(data)<0){
+                            PMS_now_data_2 = data;
+                            Log.e("now_data_2", PMS_now_data_2);
+                            Log.e("get_data_2", data);
+                            sensorName.setText(data);
+                            progressBar.setProgress((int) Double.parseDouble(data));
+                            //push 알림
+                            if ((int) Double.parseDouble(data) > 1500){
+                                sendOnChannel1("경고", "미세먼지 수치가" + Integer.parseInt(data) + "입니다");
+                            }
+                        }
+
+                    }
+                }else{
+                    sensorName.setText(data);
+                    progressBar.setProgress((int) Double.parseDouble(data));
+                }
+                */
             }
 
             @Override
